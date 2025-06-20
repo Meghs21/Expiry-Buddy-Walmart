@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExpiryBuddy - Save on Near-Expiry Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#4CAF50", secondary: "#FFA726" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Roboto', sans-serif;
+          color: #333333;
+          background-color: #F5F5F5;
+      }
+      h1, h2, h3, h4, h5, h6 {
+          font-family: 'Inter', sans-serif;
+      }
+      .logo {
+          font-family: 'Pacifico', serif;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      input[type="number"] {
+          -moz-appearance: textfield;
+      }
+      .custom-checkbox {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+      }
+      .custom-checkbox input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+      }
+      .checkmark {
+          height: 20px;
+          width: 20px;
+          background-color: #fff;
+          border: 2px solid #ddd;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      .custom-checkbox input:checked ~ .checkmark {
+          background-color: #4CAF50;
+          border-color: #4CAF50;
+      }
+      .checkmark:after {
+          content: "";
+          display: none;
+      }
+      .custom-checkbox input:checked ~ .checkmark:after {
+          display: block;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+          margin-bottom: 2px;
+      }
+      .custom-switch {
+          position: relative;
+          display: inline-block;
+          width: 48px;
+          height: 24px;
+      }
+      .custom-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+      }
+      .switch-slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 24px;
+      }
+      .switch-slider:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+      }
+      input:checked + .switch-slider {
+          background-color: #4CAF50;
+      }
+      input:checked + .switch-slider:before {
+          transform: translateX(24px);
+      }
+      .custom-select {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+      }
+      .custom-select select {
+          display: none;
+      }
+      .select-selected {
+          background-color: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          padding: 10px 16px;
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .select-items {
+          position: absolute;
+          background-color: white;
+          top: 100%;
+          left: 0;
+          right: 0;
+          z-index: 99;
+          border-radius: 8px;
+          margin-top: 4px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          max-height: 250px;
+          overflow-y: auto;
+          display: none;
+      }
+      .select-items div {
+          padding: 10px 16px;
+          cursor: pointer;
+      }
+      .select-items div:hover {
+          background-color: rgba(76, 175, 80, 0.1);
+      }
+      .select-hide {
+          display: none;
+      }
+      .same-as-selected {
+          background-color: rgba(76, 175, 80, 0.1);
+      }
+      .range-slider {
+          width: 100%;
+          height: 5px;
+          background: #ddd;
+          border-radius: 5px;
+          position: relative;
+      }
+      .range-selected {
+          height: 100%;
+          left: 0;
+          right: 0;
+          position: absolute;
+          border-radius: 5px;
+          background: #4CAF50;
+      }
+      .range-input {
+          position: relative;
+          height: 5px;
+      }
+      .range-input input {
+          position: absolute;
+          width: 100%;
+          height: 5px;
+          background: none;
+          pointer-events: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+      }
+      .range-input input::-webkit-slider-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          border: 3px solid #4CAF50;
+          background: white;
+          pointer-events: auto;
+          -webkit-appearance: none;
+          cursor: pointer;
+      }
+      .range-input input::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          border: 3px solid #4CAF50;
+          background: white;
+          pointer-events: auto;
+          -moz-appearance: none;
+          cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div
+        class="container mx-auto px-4 flex items-center justify-between h-16"
+      >
+        <div class="flex items-center">
+          <a href="#" class="text-primary text-2xl font-['Pacifico'] mr-8"
+            >ExpiryBuddy</a
+          >
+          <nav class="hidden md:flex space-x-6">
+            <a href="#" class="text-primary font-medium">Browse</a>
+            <a href="#" class="text-gray-600 hover:text-primary font-medium"
+              >Upload</a
+            >
+            <a href="#" class="text-gray-600 hover:text-primary font-medium"
+              >Donations</a
+            >
+          </nav>
+        </div>
+
+        <div class="flex-1 max-w-md mx-4 hidden md:block">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search products, categories, or locations..."
+              class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            />
+            <div
+              class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
+            >
+              <i class="ri-search-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-notification-3-line text-xl"></i>
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-user-line text-xl"></i>
+          </button>
+          <button
+            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-menu-line text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="md:hidden px-4 py-2 bg-white border-t border-gray-100">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search..."
+            class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+          />
+          <div
+            class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
+          >
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-gradient-to-r from-green-50 to-green-100 py-8">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="md:w-1/2 mb-8 md:mb-0">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+              Save Money, Reduce Waste
+            </h1>
+            <p class="text-lg text-gray-600 mb-6">
+              Find discounted near-expiry products from local retailers and help
+              save the planet one purchase at a time.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button
+                class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
+              >
+                Browse Products
+              </button>
+              <button
+                class="bg-white text-primary border border-primary px-6 py-3 rounded-button font-medium hover:bg-green-50 transition-colors whitespace-nowrap"
+              >
+                For Retailers
+              </button>
+            </div>
+
+            <div class="flex flex-wrap gap-6 mt-8">
+              <div class="flex items-center">
+                <div
+                  class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
+                >
+                  <i class="ri-leaf-line text-primary text-xl"></i>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-primary">2,450 kg</p>
+                  <p class="text-sm text-gray-600">Food saved</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div
+                  class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
+                >
+                  <i class="ri-store-2-line text-primary text-xl"></i>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-primary">85+</p>
+                  <p class="text-sm text-gray-600">Local retailers</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div
+                  class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
+                >
+                  <i class="ri-hand-heart-line text-primary text-xl"></i>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-primary">320</p>
+                  <p class="text-sm text-gray-600">Donations made</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:w-1/2 flex justify-center">
+            <img
+              src="https://readdy.ai/api/search-image?query=A%20modern%2C%20clean%20photo%20of%20a%20diverse%20array%20of%20grocery%20products%20with%20discount%20tags%20and%20expiry%20dates%20visible.%20The%20image%20shows%20fruits%2C%20vegetables%2C%20dairy%20products%2C%20and%20packaged%20goods%20arranged%20neatly%20with%20price%20tags%20showing%20original%20and%20discounted%20prices.%20The%20lighting%20is%20bright%20and%20professional%2C%20creating%20an%20appealing%20shopping%20atmosphere.&width=600&height=500&seq=1&orientation=landscape"
+              alt="Discounted grocery products"
+              class="rounded-lg shadow-lg max-w-full h-auto"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
+        <div class="flex flex-col md:flex-row md:items-center gap-4 flex-wrap">
+          <div class="md:w-48">
+            <div class="custom-select">
+              <div class="select-selected">
+                <span>All Categories</span>
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
+              <div class="select-items select-hide">
+                <div>All Categories</div>
+                <div>Food</div>
+                <div>Beverages</div>
+                <div>Dairy</div>
+                <div>Bakery</div>
+                <div>Personal Care</div>
+                <div>Household</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:w-48">
+            <div class="custom-select">
+              <div class="select-selected">
+                <span>All Locations</span>
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
+              <div class="select-items select-hide">
+                <div>All Locations</div>
+                <div>Downtown</div>
+                <div>North End</div>
+                <div>West Side</div>
+                <div>East Village</div>
+                <div>South Bay</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1 min-w-[200px]">
+            <p class="text-sm text-gray-600 mb-1">
+              Discount Range: <span id="discountValue">30% - 90%</span>
+            </p>
+            <div class="range-slider">
+              <div class="range-selected"></div>
+              <div class="range-input">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="30"
+                  class="min-range"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="90"
+                  class="max-range"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="md:w-48">
+            <div class="custom-select">
+              <div class="select-selected">
+                <span>Sort by: Expiry Date</span>
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
+              <div class="select-items select-hide">
+                <div>Sort by: Expiry Date</div>
+                <div>Sort by: Discount %</div>
+                <div>Sort by: Price (Low to High)</div>
+                <div>Sort by: Price (High to Low)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button
+              class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-button"
+            >
+              <i class="ri-layout-grid-line"></i>
+            </button>
+            <button
+              class="w-10 h-10 flex items-center justify-center bg-gray-100 text-gray-600 rounded-button"
+            >
+              <i class="ri-list-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
+    <% products.forEach(product => { %>
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover rounded" />
+      <h2 class="text-xl font-bold mt-2"><%= product.name %></h2>
+      <p class="text-gray-700"><%= product.category %> | <%= product.location %></p>
+      <p class="mt-1 text-sm">Expires: <%= new Date(product.expiryDate).toLocaleDateString() %></p>
+      <p class="text-green-600 font-semibold mt-1">₹<%= product.finalPrice || product.price %></p>
+      <p class="text-sm text-gray-500">Discount: <%= product.discount %>%</p>
+    </div>
+  <% }); %>
+</div>
+
+
+
+
+
+    <section class="bg-green-50 py-16">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">How ExpiryBuddy Works</h2>
+          <p class="text-gray-600">
+            Join our community to save money, reduce waste, and make a positive
+            impact on the environment.
+          </p>
+        </div>
+
+        
+      </div>
+    </section>
+
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+            <h2 class="text-3xl font-bold mb-4">Upload Your Products</h2>
+            <p class="text-gray-600 mb-6">
+              Are you a retailer with products approaching their expiry date?
+              List them on ExpiryBuddy to recover costs and reduce waste.
+            </p>
+
+            <div class="bg-green-50 p-4 rounded-lg mb-6">
+              <div class="flex items-start">
+                <div
+                  class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full mr-4 mt-1"
+                >
+                  <i class="ri-check-line text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold mb-1">Quick and Easy</h4>
+                  <p class="text-gray-600 text-sm">
+                    Upload your products in less than 2 minutes with our
+                    streamlined form.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded-lg mb-6">
+              <div class="flex items-start">
+                <div
+                  class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full mr-4 mt-1"
+                >
+                  <i class="ri-check-line text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold mb-1">Recover Costs</h4>
+                  <p class="text-gray-600 text-sm">
+                    Turn potential losses into revenue by selling at discounted
+                    prices.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded-lg mb-6">
+              <div class="flex items-start">
+                <div
+                  class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full mr-4 mt-1"
+                >
+                  <i class="ri-check-line text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold mb-1">Reduce Waste</h4>
+                  <p class="text-gray-600 text-sm">
+                    Help the environment by reducing food waste and unnecessary
+                    disposal.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
+            >
+              Start Uploading Now
+            </button>
+          </div>
+
+          <div class="md:w-1/2">
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h3 class="text-xl font-bold mb-4">Product Upload Form</h3>
+
+              <form id="product-upload-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Product Name</label
+                    >
+                    <input
+                      type="text"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="e.g. Organic Milk"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Category</label
+                    >
+                    <div class="custom-select">
+                      <div class="select-selected">
+                        <span>Select category</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                      </div>
+                      <div class="select-items select-hide">
+                        <div>Select category</div>
+                        <div>Food</div>
+                        <div>Beverages</div>
+                        <div>Dairy</div>
+                        <div>Bakery</div>
+                        <div>Produce</div>
+                        <div>Meat</div>
+                        <div>Seafood</div>
+                        <div>Personal Care</div>
+                        <div>Household</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Original Price ($)</label
+                    >
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="e.g. 4.99"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Discounted Price ($)</label
+                    >
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="e.g. 2.49"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Quantity</label
+                    >
+                    <input
+                      type="number"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="e.g. 10"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Expiry Date</label
+                    >
+                    <input
+                      type="date"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Location</label
+                    >
+                    <div class="custom-select">
+                      <div class="select-selected">
+                        <span>Select location</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                      </div>
+                      <div class="select-items select-hide">
+                        <div>Select location</div>
+                        <div>Downtown</div>
+                        <div>North End</div>
+                        <div>West Side</div>
+                        <div>East Village</div>
+                        <div>South Bay</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Description</label
+                  >
+                  <textarea
+                    class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    rows="3"
+                    placeholder="Describe your product..."
+                  ></textarea>
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Image URL</label
+                  >
+                  <input
+                    type="text"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+
+                <div class="flex items-center mb-4">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" />
+                    <span class="checkmark"></span>
+                    <span class="ml-2 text-sm text-gray-700"
+                      >This is a perishable item</span
+                    >
+                  </label>
+                </div>
+
+                <div class="flex items-center mb-6">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" />
+                    <span class="checkmark"></span>
+                    <span class="ml-2 text-sm text-gray-700"
+                      >I agree to donate unsold items to local shelters</span
+                    >
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
+                >
+                  Upload Product
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-green-50">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">Our Impact</h2>
+          <p class="text-gray-600">
+            Together, we're making a difference in reducing food waste and
+            helping communities.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+            <div class="text-4xl font-bold text-primary mb-2">2,450 kg</div>
+            <p class="text-gray-600">Food Saved</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+            <div class="text-4xl font-bold text-primary mb-2">$12,800</div>
+            <p class="text-gray-600">Customer Savings</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+            <div class="text-4xl font-bold text-primary mb-2">320</div>
+            <p class="text-gray-600">Donations Made</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+            <div class="text-4xl font-bold text-primary mb-2">85+</div>
+            <p class="text-gray-600">Participating Retailers</p>
+          </div>
+        </div>
+
+        <div class="mt-12 bg-white p-6 rounded-lg shadow-sm">
+          <h3 class="text-xl font-bold mb-4 text-center">
+            Environmental Impact
+          </h3>
+          <div id="impact-chart" class="w-full h-80"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">What Our Users Say</h2>
+          <p class="text-gray-600">
+            Join thousands of satisfied customers and retailers who are making a
+            difference.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="flex items-center mb-4">
+              <div class="text-yellow-400 flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              "I've saved over $200 on groceries in the past month using
+              ExpiryBuddy. The products are great quality and I love that I'm
+              helping reduce waste."
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
+              >
+                <i class="ri-user-line text-primary"></i>
+              </div>
+              <div>
+                <p class="font-medium">Rebecca Thompson</p>
+                <p class="text-sm text-gray-500">Shopper</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="flex items-center mb-4">
+              <div class="text-yellow-400 flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              "As a small grocery store owner, ExpiryBuddy has helped us recover
+              costs on products we would have thrown away. It's a win-win for
+              everyone."
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
+              >
+                <i class="ri-user-line text-primary"></i>
+              </div>
+              <div>
+                <p class="font-medium">Michael Rodriguez</p>
+                <p class="text-sm text-gray-500">Retailer</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="flex items-center mb-4">
+              <div class="text-yellow-400 flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              "Our animal shelter has benefited greatly from the donation
+              program. We receive quality food that would otherwise go to waste,
+              helping us care for more animals."
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
+              >
+                <i class="ri-user-line text-primary"></i>
+              </div>
+              <div>
+                <p class="font-medium">Jennifer Wilson</p>
+                <p class="text-sm text-gray-500">Shelter Manager</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-green-50">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Join Our Newsletter</h2>
+        <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+          Stay updated with the latest deals, tips on reducing waste, and news
+          about our environmental impact.
+        </p>
+
+        <div class="max-w-md mx-auto flex">
+          <input
+            type="email"
+            placeholder="Your email address"
+            class="flex-1 px-4 py-3 rounded-l-button border-none focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <button
+            class="bg-primary text-white px-6 py-3 rounded-r-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
+          >
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-['Pacifico'] mb-4">ExpiryBuddy</h3>
+            <p class="text-gray-400 mb-4">
+              Helping you save money while reducing food waste in your
+              community.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-facebook-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-twitter-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-instagram-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-linkedin-fill"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Home</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Browse Products</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Upload Products</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Donations</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Our Impact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-4">For Users</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Create Account</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >For Retailers</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >For Shelters</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">FAQs</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+            <ul class="space-y-2">
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+                <a
+                  href="mailto:info@expirybuddy.com"
+                  class="text-gray-400 hover:text-white"
+                  >info@expirybuddy.com</a
+                >
+              </li>
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-phone-line"></i>
+                </div>
+                <a href="tel:+1234567890" class="text-gray-400 hover:text-white"
+                  >+1 (234) 567-890</a
+                >
+              </li>
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <span class="text-gray-400"
+                  >123 Green Street, Anytown, USA</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-400 text-sm mb-4 md:mb-0">
+            &copy; 2025 ExpiryBuddy. All rights reserved.
+          </p>
+
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Cookie Policy</a
+            >
+          </div>
+
+          <div class="flex items-center mt-4 md:mt-0">
+            <div class="flex space-x-3">
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-visa-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-mastercard-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-paypal-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-apple-fill text-gray-400 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+
+    <script id="custom-select-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const customSelects = document.querySelectorAll(".custom-select");
+
+        customSelects.forEach((select) => {
+          const selectedDiv = select.querySelector(".select-selected");
+          const itemsDiv = select.querySelector(".select-items");
+          const items = itemsDiv.querySelectorAll("div");
+
+          selectedDiv.addEventListener("click", function (e) {
+            e.stopPropagation();
+            closeAllSelect(this);
+            itemsDiv.classList.toggle("select-hide");
+            this.classList.toggle("select-arrow-active");
+          });
+
+          items.forEach((item) => {
+            item.addEventListener("click", function () {
+              const selectedSpan = selectedDiv.querySelector("span");
+              selectedSpan.textContent = this.textContent;
+
+              const sameAsSelected = itemsDiv.querySelector(".same-as-selected");
+              if (sameAsSelected) {
+                sameAsSelected.classList.remove("same-as-selected");
+              }
+              this.classList.add("same-as-selected");
+
+              selectedDiv.click();
+            });
+          });
+        });
+
+        function closeAllSelect(elmnt) {
+          const items = document.querySelectorAll(".select-items");
+          const selected = document.querySelectorAll(".select-selected");
+
+          items.forEach((item, idx) => {
+            if (elmnt != selected[idx]) {
+              item.classList.add("select-hide");
+              selected[idx].classList.remove("select-arrow-active");
+            }
+          });
+        }
+
+        document.addEventListener("click", closeAllSelect);
+      });
+    </script>
+
+    <script id="range-slider-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const minRange = document.querySelector(".min-range");
+        const maxRange = document.querySelector(".max-range");
+        const rangeSelected = document.querySelector(".range-selected");
+        const discountValue = document.getElementById("discountValue");
+
+        function updateRangeValues() {
+          const minVal = parseInt(minRange.value);
+          const maxVal = parseInt(maxRange.value);
+
+          if (minVal > maxVal) {
+            minRange.value = maxVal;
+            return;
+          }
+
+          const leftPercent = (minVal / minRange.max) * 100;
+          const rightPercent = 100 - (maxVal / maxRange.max) * 100;
+
+          rangeSelected.style.left = leftPercent + "%";
+          rangeSelected.style.right = rightPercent + "%";
+
+          discountValue.textContent = minVal + "% - " + maxVal + "%";
+        }
+
+        minRange.addEventListener("input", updateRangeValues);
+        maxRange.addEventListener("input", updateRangeValues);
+
+        updateRangeValues();
+      });
+    </script>
+    <script id="form-submission-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const productForm = document.getElementById("product-upload-form");
+
+        if (productForm) {
+          productForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Simulate form submission
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+
+            submitButton.textContent = "Uploading...";
+            submitButton.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+              // Reset form
+              productForm.reset();
+
+              // Show success message
+              const successMessage = document.createElement("div");
+              successMessage.className =
+                "bg-green-100 text-primary p-3 rounded-lg mt-4";
+              successMessage.textContent = "Product uploaded successfully!";
+
+              productForm.appendChild(successMessage);
+
+              // Reset button
+              submitButton.textContent = originalText;
+              submitButton.disabled = false;
+
+              // Remove success message after 3 seconds
+              setTimeout(() => {
+                successMessage.remove();
+              }, 3000);
+            }, 1500);
+          });
+        }
+      });
+    </script>
+
+    <script id="impact-chart-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const chartContainer = document.getElementById("impact-chart");
+
+        if (chartContainer) {
+          const chart = echarts.init(chartContainer);
+
+          const option = {
+            animation: false,
+            tooltip: {
+              trigger: "axis",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              textStyle: {
+                color: "#1f2937",
+              },
+            },
+            legend: {
+              data: [
+                "Food Saved (kg)",
+                "CO₂ Emissions Reduced (kg)",
+                "Water Saved (L)",
+              ],
+              textStyle: {
+                color: "#1f2937",
+              },
+            },
+            grid: {
+              left: 0,
+              right: 0,
+              top: 30,
+              bottom: 0,
+              containLabel: true,
+            },
+            xAxis: {
+              type: "category",
+              data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+              axisLabel: {
+                color: "#1f2937",
+              },
+            },
+            yAxis: {
+              type: "value",
+              axisLabel: {
+                color: "#1f2937",
+              },
+            },
+            series: [
+              {
+                name: "Food Saved (kg)",
+                type: "line",
+                smooth: true,
+                data: [120, 180, 240, 320, 390, 450],
+                itemStyle: {
+                  color: "rgba(87, 181, 231, 1)",
+                },
+                lineStyle: {
+                  width: 3,
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(87, 181, 231, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(87, 181, 231, 0.1)",
+                    },
+                  ]),
+                },
+                showSymbol: false,
+              },
+              {
+                name: "CO₂ Emissions Reduced (kg)",
+                type: "line",
+                smooth: true,
+                data: [80, 120, 160, 210, 260, 300],
+                itemStyle: {
+                  color: "rgba(141, 211, 199, 1)",
+                },
+                lineStyle: {
+                  width: 3,
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(141, 211, 199, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(141, 211, 199, 0.1)",
+                    },
+                  ]),
+                },
+                showSymbol: false,
+              },
+              {
+                name: "Water Saved (L)",
+                type: "line",
+                smooth: true,
+                data: [300, 450, 600, 750, 900, 1050],
+                itemStyle: {
+                  color: "rgba(251, 191, 114, 1)",
+                },
+                lineStyle: {
+                  width: 3,
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(251, 191, 114, 0.3)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(251, 191, 114, 0.1)",
+                    },
+                  ]),
+                },
+                showSymbol: false,
+              },
+            ],
+          };
+
+          chart.setOption(option);
+
+          window.addEventListener("resize", function () {
+            chart.resize();
+          });
+        }
+      });
+    </script>
+
+    <script id="mobile-menu-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.querySelector(".ri-menu-line").parentElement;
+
+        if (menuButton) {
+          menuButton.addEventListener("click", function () {
+            const mobileMenu = document.createElement("div");
+            mobileMenu.className =
+              "fixed inset-0 bg-gray-800 bg-opacity-90 z-50 flex flex-col";
+
+            const header = document.createElement("div");
+            header.className =
+              "flex justify-between items-center p-4 border-b border-gray-700";
+
+            const logo = document.createElement("div");
+            logo.className = "text-primary text-2xl font-['Pacifico']";
+            logo.textContent = "ExpiryBuddy";
+
+            const closeButton = document.createElement("button");
+            closeButton.className = "text-white text-2xl";
+            closeButton.innerHTML = '<i class="ri-close-line"></i>';
+
+            header.appendChild(logo);
+            header.appendChild(closeButton);
+
+            const nav = document.createElement("nav");
+            nav.className = "flex-1 overflow-y-auto p-4";
+
+            const links = [
+              { text: "Browse", active: true },
+              { text: "Upload", active: false },
+              { text: "Donations", active: false },
+              { text: "How It Works", active: false },
+              { text: "Our Impact", active: false },
+              { text: "Contact Us", active: false },
+            ];
+
+            const ul = document.createElement("ul");
+            ul.className = "space-y-4";
+
+            links.forEach((link) => {
+              const li = document.createElement("li");
+              const a = document.createElement("a");
+              a.href = "#";
+              a.className = link.active
+                ? "text-primary text-xl font-medium block py-2"
+                : "text-white text-xl font-medium block py-2";
+              a.textContent = link.text;
+
+              li.appendChild(a);
+              ul.appendChild(li);
+            });
+
+            nav.appendChild(ul);
+
+            mobileMenu.appendChild(header);
+            mobileMenu.appendChild(nav);
+
+            document.body.appendChild(mobileMenu);
+            document.body.style.overflow = "hidden";
+
+            closeButton.addEventListener("click", function () {
+              document.body.removeChild(mobileMenu);
+              document.body.style.overflow = "";
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
