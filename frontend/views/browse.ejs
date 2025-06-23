@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExpiryBuddy - Browse Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#4CAF50", secondary: "#FFA726" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Roboto', sans-serif;
+          color: #333333;
+          background-color: #F5F5F5;
+      }
+      h1, h2, h3, h4, h5, h6 {
+          font-family: 'Inter', sans-serif;
+      }
+      .logo {
+          font-family: 'Pacifico', serif;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      input[type="number"] {
+          -moz-appearance: textfield;
+      }
+      .custom-checkbox {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+      }
+      .custom-checkbox input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+      }
+      .checkmark {
+          height: 20px;
+          width: 20px;
+          background-color: #fff;
+          border: 2px solid #ddd;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      .custom-checkbox input:checked ~ .checkmark {
+          background-color: #4CAF50;
+          border-color: #4CAF50;
+      }
+      .checkmark:after {
+          content: "";
+          display: none;
+      }
+      .custom-checkbox input:checked ~ .checkmark:after {
+          display: block;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+          margin-bottom: 2px;
+      }
+      .custom-switch {
+          position: relative;
+          display: inline-block;
+          width: 48px;
+          height: 24px;
+      }
+      .custom-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+      }
+      .switch-slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 24px;
+      }
+      .switch-slider:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+      }
+      input:checked + .switch-slider {
+          background-color: #4CAF50;
+      }
+      input:checked + .switch-slider:before {
+          transform: translateX(24px);
+      }
+      .custom-select {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+      }
+      .custom-select select {
+          display: none;
+      }
+      .select-selected {
+          background-color: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          padding: 10px 16px;
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .select-items {
+          position: absolute;
+          background-color: white;
+          top: 100%;
+          left: 0;
+          right: 0;
+          z-index: 99;
+          border-radius: 8px;
+          margin-top: 4px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          max-height: 250px;
+          overflow-y: auto;
+          display: none;
+      }
+      .select-items div {
+          padding: 10px 16px;
+          cursor: pointer;
+      }
+      .select-items div:hover {
+          background-color: rgba(76, 175, 80, 0.1);
+      }
+      .select-hide {
+          display: none;
+      }
+      .same-as-selected {
+          background-color: rgba(76, 175, 80, 0.1);
+      }
+      .range-slider {
+          width: 100%;
+          height: 5px;
+          background: #ddd;
+          border-radius: 5px;
+          position: relative;
+      }
+      .range-selected {
+          height: 100%;
+          left: 0;
+          right: 0;
+          position: absolute;
+          border-radius: 5px;
+          background: #4CAF50;
+      }
+      .range-input {
+          position: relative;
+          height: 5px;
+      }
+      .range-input input {
+          position: absolute;
+          width: 100%;
+          height: 5px;
+          background: none;
+          pointer-events: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+      }
+      .range-input input::-webkit-slider-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          border: 3px solid #4CAF50;
+          background: white;
+          pointer-events: auto;
+          -webkit-appearance: none;
+          cursor: pointer;
+      }
+      .range-input input::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          border: 3px solid #4CAF50;
+          background: white;
+          pointer-events: auto;
+          -moz-appearance: none;
+          cursor: pointer;
+      }
+      .filter-sidebar {
+          transition: transform 0.3s ease;
+      }
+      @media (max-width: 768px) {
+          .filter-sidebar {
+              transform: translateX(-100%);
+              position: fixed;
+              top: 0;
+              left: 0;
+              height: 100%;
+              z-index: 40;
+              width: 300px;
+          }
+          .filter-sidebar.active {
+              transform: translateX(0);
+          }
+          .filter-overlay {
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgba(0, 0, 0, 0.5);
+              z-index: 30;
+          }
+          .filter-overlay.active {
+              display: block;
+          }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div
+        class="container mx-auto px-4 flex items-center justify-between h-16"
+      >
+        <div class="flex items-center">
+          <a
+            href="https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5"
+            data-readdy="true"
+            class="text-primary text-2xl font-['Pacifico'] mr-8"
+            >ExpiryBuddy</a
+          >
+          <nav class="hidden md:flex space-x-6">
+            <a href="#" class="text-primary font-medium">Browse</a>
+            <a href="#" class="text-gray-600 hover:text-primary font-medium"
+              >Upload</a
+            >
+            <a href="#" class="text-gray-600 hover:text-primary font-medium"
+              >Donations</a
+            >
+          </nav>
+        </div>
+        <div class="flex-1 max-w-md mx-4 hidden md:block">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search products, categories, or locations..."
+              class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            />
+            <div
+              class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
+            >
+              <i class="ri-search-line"></i>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-notification-3-line text-xl"></i>
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-user-line text-xl"></i>
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
+          >
+            <i class="ri-shopping-cart-2-line text-xl"></i>
+            <span
+              class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"
+              >3</span
+            >
+          </button>
+          <button
+            id="mobile-menu-button"
+            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+          >
+            <i class="ri-menu-line text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden px-4 py-2 bg-white border-t border-gray-100">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search..."
+            class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+          />
+          <div
+            class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
+          >
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex items-center text-sm text-gray-600 mb-6">
+        <a
+          href="https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5"
+          data-readdy="true"
+          class="hover:text-primary"
+          >Home</a
+        >
+        <span class="mx-2">/</span>
+        <span class="text-primary font-medium">Browse Products</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Filter Sidebar -->
+        <div
+          id="filter-sidebar"
+          class="filter-sidebar bg-white rounded-lg shadow-sm p-5 md:w-72 w-full md:sticky md:top-24 h-fit"
+        >
+          <div class="flex justify-between items-center mb-6 md:hidden">
+            <h3 class="font-bold text-lg">Filters</h3>
+            <button
+              id="close-filter"
+              class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+            >
+              <i class="ri-close-line text-xl"></i>
+            </button>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Price Range</h4>
+            <div class="flex items-center justify-between mb-2">
+              <span id="price-min" class="text-sm text-gray-600">$0</span>
+              <span id="price-max" class="text-sm text-gray-600">$50</span>
+            </div>
+            <div class="range-slider mb-4">
+              <div class="range-selected" id="price-range-selected"></div>
+              <div class="range-input">
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  value="0"
+                  class="price-min-range"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  value="50"
+                  class="price-max-range"
+                />
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input
+                  type="number"
+                  min="0"
+                  max="50"
+                  value="0"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                  id="price-min-input"
+                />
+                <div class="absolute left-3 top-2 text-gray-500 text-sm">$</div>
+              </div>
+              <span class="text-gray-400">-</span>
+              <div class="relative flex-1">
+                <input
+                  type="number"
+                  min="0"
+                  max="50"
+                  value="50"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                  id="price-max-input"
+                />
+                <div class="absolute left-3 top-2 text-gray-500 text-sm">$</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Expiry Date Range</h4>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm text-gray-600 mb-1">From</label>
+                <input
+                  type="date"
+                  value="2025-06-20"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                />
+              </div>
+              <div>
+                <label class="block text-sm text-gray-600 mb-1">To</label>
+                <input
+                  type="date"
+                  value="2025-06-27"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Categories</h4>
+            <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+              <label class="custom-checkbox">
+                <input type="checkbox" checked />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">All Categories</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Dairy</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Bakery</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Produce</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Meat</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Seafood</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Ready Meals</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Beverages</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Personal Care</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Household</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Store Location</h4>
+            <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+              <label class="custom-checkbox">
+                <input type="checkbox" checked />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">All Locations</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">Downtown</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">North End</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">West Side</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">East Village</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">South Bay</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Rating</h4>
+            <div class="space-y-2">
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="rating" class="hidden" />
+                <div
+                  class="w-5 h-5 border-2 border-gray-300 rounded-full mr-2 flex items-center justify-center"
+                >
+                  <div class="w-3 h-3 bg-primary rounded-full hidden"></div>
+                </div>
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <span class="ml-2 text-gray-600 text-sm">& Up</span>
+                </div>
+              </label>
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="rating" class="hidden" />
+                <div
+                  class="w-5 h-5 border-2 border-gray-300 rounded-full mr-2 flex items-center justify-center"
+                >
+                  <div class="w-3 h-3 bg-primary rounded-full hidden"></div>
+                </div>
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-2 text-gray-600 text-sm">& Up</span>
+                </div>
+              </label>
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="rating" class="hidden" checked />
+                <div
+                  class="w-5 h-5 border-2 border-primary rounded-full mr-2 flex items-center justify-center"
+                >
+                  <div class="w-3 h-3 bg-primary rounded-full"></div>
+                </div>
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-2 text-gray-600 text-sm">& Up</span>
+                </div>
+              </label>
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="rating" class="hidden" />
+                <div
+                  class="w-5 h-5 border-2 border-gray-300 rounded-full mr-2 flex items-center justify-center"
+                >
+                  <div class="w-3 h-3 bg-primary rounded-full hidden"></div>
+                </div>
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-2 text-gray-600 text-sm">& Up</span>
+                </div>
+              </label>
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="rating" class="hidden" />
+                <div
+                  class="w-5 h-5 border-2 border-gray-300 rounded-full mr-2 flex items-center justify-center"
+                >
+                  <div class="w-3 h-3 bg-primary rounded-full hidden"></div>
+                </div>
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-2 text-gray-600 text-sm">& Up</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-medium text-gray-800 mb-3">Availability</h4>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">In Stock Only</span>
+              <label class="custom-switch">
+                <input type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <button
+              class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
+            >
+              Apply Filters
+            </button>
+            <button
+              class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button font-medium hover:bg-gray-50 transition-colors whitespace-nowrap"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1">
+          <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+            <div
+              class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4"
+            >
+              <h1 class="text-2xl font-bold">Browse Products (48)</h1>
+              <div class="flex md:justify-end items-center gap-3">
+                <button
+                  id="filter-button"
+                  class="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 whitespace-nowrap"
+                >
+                  <i class="ri-filter-3-line"></i>
+                  <span>Filters</span>
+                </button>
+                <div class="custom-select w-48">
+                  <div class="select-selected">
+                    <span>Sort by: Expiry Date</span>
+                    <i class="ri-arrow-down-s-line"></i>
+                  </div>
+                  <div class="select-items select-hide">
+                    <div>Sort by: Expiry Date</div>
+                    <div>Sort by: Discount %</div>
+                    <div>Sort by: Price (Low to High)</div>
+                    <div>Sort by: Price (High to Low)</div>
+                    <div>Sort by: Rating</div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center border border-gray-300 rounded-button overflow-hidden"
+                >
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-primary text-white"
+                  >
+                    <i class="ri-layout-grid-line"></i>
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-100"
+                  >
+                    <i class="ri-list-check"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+              <div
+                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
+              >
+                <span>Dairy</span>
+                <button class="ml-2 w-4 h-4 flex items-center justify-center">
+                  <i class="ri-close-line"></i>
+                </button>
+              </div>
+              <div
+                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
+              >
+                <span>Price: $0 - $10</span>
+                <button class="ml-2 w-4 h-4 flex items-center justify-center">
+                  <i class="ri-close-line"></i>
+                </button>
+              </div>
+              <div
+                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
+              >
+                <span>Expires within 3 days</span>
+                <button class="ml-2 w-4 h-4 flex items-center justify-center">
+                  <i class="ri-close-line"></i>
+                </button>
+              </div>
+              <button class="text-primary text-sm hover:underline">
+                Clear All
+              </button>
+            </div>
+
+            <div
+              class="flex items-center justify-between text-sm text-gray-600"
+            >
+              <div>Showing 1-16 of 48 products</div>
+              <div class="flex items-center gap-2">
+                <span>Show:</span>
+                <div class="custom-select w-20">
+                  <div class="select-selected">
+                    <span>16</span>
+                    <i class="ri-arrow-down-s-line"></i>
+                  </div>
+                  <div class="select-items select-hide">
+                    <div>16</div>
+                    <div>32</div>
+                    <div>48</div>
+                    <div>All</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            <!-- Product Card 1 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520organic%2520milk%2520cartons%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520milk%2520is%2520in%2520clean%252C%2520white%2520packaging%2520with%2520green%2520organic%2520labels.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520product%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=2&orientation=landscape"
+                  alt="Organic Milk"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  2 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Dairy
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Organic Whole Milk</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$4.99</span>
+                  <span class="text-lg font-bold text-primary">$2.49</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(42)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 22, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Greenfield Market</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>Downtown</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520bread%2520loaves%2520and%2520pastries%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520bread%2520is%2520artisanal%2520with%2520golden-brown%2520crusts.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=3&orientation=landscape"
+                  alt="Artisan Bread"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  3 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Bakery
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Artisan Sourdough Bread</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$6.99</span>
+                  <span class="text-lg font-bold text-primary">$3.49</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(28)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 23, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Artisan Bakery</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>West Side</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520yogurt%2520containers%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520yogurt%2520is%2520in%2520clean%252C%2520modern%2520packaging%2520with%2520fruit%2520images.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=4&orientation=landscape"
+                  alt="Greek Yogurt"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  1 day left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Dairy
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Greek Yogurt Variety Pack
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$8.99</span>
+                  <span class="text-lg font-bold text-primary">$3.59</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >60% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(56)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 21, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>FreshMart</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>North End</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520fruits%2520and%2520vegetables%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520produce%2520includes%2520colorful%2520bell%2520peppers%252C%2520tomatoes%252C%2520and%2520leafy%2520greens.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=5&orientation=landscape"
+                  alt="Fresh Produce"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  3 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Produce
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Organic Vegetable Bundle</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$12.99</span>
+                  <span class="text-lg font-bold text-primary">$5.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >54% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(37)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 23, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Nature's Basket</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>East Village</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 5 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520fish%2520fillets%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520fish%2520is%2520on%2520a%2520clean%2520white%2520tray%2520with%2520ice.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520product%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=6&orientation=landscape"
+                  alt="Fresh Fish"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Today only!
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Seafood
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Fresh Atlantic Salmon</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$18.99</span>
+                  <span class="text-lg font-bold text-primary">$7.59</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >60% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(19)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 20, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Ocean Market</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>South Bay</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 6 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520meat%2520cuts%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520meat%2520is%2520on%2520a%2520clean%2520white%2520tray%2520with%2520butcher%2520paper.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520product%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=7&orientation=landscape"
+                  alt="Fresh Meat"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Today only!
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Meat
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Grass-Fed Ground Beef</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$9.99</span>
+                  <span class="text-lg font-bold text-primary">$4.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(31)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 20, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Quality Meats</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>Downtown</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 7 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520berries%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520berries%2520include%2520strawberries%252C%2520blueberries%252C%2520and%2520raspberries%2520in%2520clear%2520plastic%2520containers.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=8&orientation=landscape"
+                  alt="Fresh Berries"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  2 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Produce
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Mixed Berry Pack</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$7.99</span>
+                  <span class="text-lg font-bold text-primary">$3.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(47)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 22, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Fresh & Local</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>West Side</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 8 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520prepared%2520meals%2520in%2520containers%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520meals%2520include%2520pasta%252C%2520salad%252C%2520and%2520a%2520protein%2520option%2520in%2520microwave-safe%2520containers.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=9&orientation=landscape"
+                  alt="Prepared Meals"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Today only!
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Ready Meals
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Prepared Lunch Boxes</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$10.99</span>
+                  <span class="text-lg font-bold text-primary">$4.39</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >60% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(23)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 20, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Urban Deli</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>Downtown</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 9 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520cheese%2520varieties%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520cheese%2520selection%2520includes%2520cheddar%252C%2520brie%252C%2520and%2520gouda%2520on%2520a%2520wooden%2520board.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=10&orientation=landscape"
+                  alt="Cheese Selection"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  4 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Dairy
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Artisanal Cheese Selection
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$14.99</span>
+                  <span class="text-lg font-bold text-primary">$7.49</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(52)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 24, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Gourmet Market</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>North End</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 10 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fresh%2520eggs%2520in%2520cartons%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520eggs%2520are%2520in%2520clean%2520cardboard%2520packaging%2520with%2520organic%2520labels.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=11&orientation=landscape"
+                  alt="Organic Eggs"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  5 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Dairy
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Organic Free-Range Eggs</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$5.99</span>
+                  <span class="text-lg font-bold text-primary">$2.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(34)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 25, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Farm Fresh</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>East Village</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 11 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520fruit%2520juices%2520in%2520bottles%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520juices%2520are%2520in%2520glass%2520bottles%2520with%2520colorful%2520labels%2520showing%2520different%2520fruit%2520flavors.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=12&orientation=landscape"
+                  alt="Fresh Juices"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  3 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Beverages
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Cold-Pressed Juice Trio</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$11.99</span>
+                  <span class="text-lg font-bold text-primary">$5.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(41)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 23, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Juice Bar</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>Downtown</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 12 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520pasta%2520packages%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520pasta%2520is%2520in%2520clean%2520packaging%2520with%2520Italian%2520labels%2520and%2520images%2520of%2520the%2520pasta%2520shape.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=13&orientation=landscape"
+                  alt="Italian Pasta"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  7 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Pantry
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Imported Italian Pasta Set
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$8.99</span>
+                  <span class="text-lg font-bold text-primary">$4.49</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(29)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 27, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Italian Imports</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>West Side</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 13 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520chocolate%2520bars%2520and%2520confections%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520chocolates%2520are%2520in%2520elegant%2520packaging%2520with%2520gold%2520accents.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=14&orientation=landscape"
+                  alt="Chocolate Assortment"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  10 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Sweets
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Premium Chocolate Assortment
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$15.99</span>
+                  <span class="text-lg font-bold text-primary">$7.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(63)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: June 30, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Chocolate House</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>North End</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 14 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520organic%2520honey%2520jars%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520honey%2520is%2520in%2520glass%2520jars%2520with%2520rustic%2520labels%2520and%2520wooden%2520dippers.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=15&orientation=landscape"
+                  alt="Organic Honey"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  14 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Pantry
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">Organic Raw Honey</h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$9.99</span>
+                  <span class="text-lg font-bold text-primary">$4.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(38)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: July 4, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Bee Haven</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>East Village</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 15 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520organic%2520tea%2520boxes%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520tea%2520is%2520in%2520elegant%2520packaging%2520with%2520herbal%2520designs%2520and%2520tea%2520leaf%2520imagery.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=16&orientation=landscape"
+                  alt="Herbal Tea"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  30 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Beverages
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Organic Herbal Tea Collection
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$12.99</span>
+                  <span class="text-lg font-bold text-primary">$6.49</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-line"></i>
+                  <span class="ml-1 text-xs text-gray-500">(45)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: July 20, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Tea House</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>Downtown</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 16 -->
+            <div
+              class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=A%2520professional%2520product%2520photo%2520of%2520organic%2520coffee%2520bags%2520with%2520clear%2520expiry%2520date%2520labels%2520visible.%2520The%2520coffee%2520is%2520in%2520kraft%2520paper%2520packaging%2520with%2520modern%2520design%2520elements%2520and%2520coffee%2520bean%2520imagery.%2520The%2520image%2520has%2520a%2520clean%2520white%2520background%252C%2520good%2520lighting%252C%2520and%2520shows%2520the%2520products%2520from%2520a%2520straight-on%2520angle%2520to%2520clearly%2520display%2520all%2520details.&width=400&height=300&seq=17&orientation=landscape"
+                  alt="Organic Coffee"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  21 days left
+                </div>
+                <div
+                  class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full"
+                >
+                  Beverages
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1">
+                  Single-Origin Coffee Beans
+                </h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">$13.99</span>
+                  <span class="text-lg font-bold text-primary">$6.99</span>
+                  <span
+                    class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"
+                    >50% off</span
+                  >
+                </div>
+                <div class="flex items-center text-yellow-400 mb-3">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                  <span class="ml-1 text-xs text-gray-500">(58)</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-calendar-line"></i>
+                  </div>
+                  <span>Expires: July 11, 2025</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-store-2-line"></i>
+                    </div>
+                    <span>Coffee Roasters</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-600">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1">
+                      <i class="ri-map-pin-line"></i>
+                    </div>
+                    <span>South Bay</span>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="flex-1 bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors whitespace-nowrap"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    class="w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button hover:bg-green-50 transition-colors"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-center">
+            <nav class="flex items-center">
+              <button
+                class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-button text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled
+              >
+                <i class="ri-arrow-left-s-line"></i>
+              </button>
+              <button
+                class="w-10 h-10 flex items-center justify-center border-t border-b border-gray-300 text-white bg-primary"
+              >
+                1
+              </button>
+              <button
+                class="w-10 h-10 flex items-center justify-center border-t border-b border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                2
+              </button>
+              <button
+                class="w-10 h-10 flex items-center justify-center border-t border-b border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                3
+              </button>
+              <span
+                class="w-10 h-10 flex items-center justify-center border-t border-b border-gray-300 text-gray-600"
+                >...</span
+              >
+              <button
+                class="w-10 h-10 flex items-center justify-center border-t border-b border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                5
+              </button>
+              <button
+                class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-button text-gray-600 hover:bg-gray-50"
+              >
+                <i class="ri-arrow-right-s-line"></i>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="filter-overlay" class="filter-overlay"></div>
+
+    <footer class="bg-gray-800 text-white pt-12 pb-6 mt-16">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-['Pacifico'] mb-4">ExpiryBuddy</h3>
+            <p class="text-gray-400 mb-4">
+              Helping you save money while reducing food waste in your
+              community.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-facebook-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-twitter-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-instagram-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-linkedin-fill"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5"
+                  data-readdy="true"
+                  class="text-gray-400 hover:text-white"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Browse Products</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Upload Products</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Donations</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Our Impact</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">For Users</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Create Account</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >For Retailers</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >For Shelters</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">FAQs</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+            <ul class="space-y-2">
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+                <a
+                  href="mailto:info@expirybuddy.com"
+                  class="text-gray-400 hover:text-white"
+                  >info@expirybuddy.com</a
+                >
+              </li>
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-phone-line"></i>
+                </div>
+                <a href="tel:+1234567890" class="text-gray-400 hover:text-white"
+                  >+1 (234) 567-890</a
+                >
+              </li>
+              <li class="flex items-center">
+                <div
+                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
+                >
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <span class="text-gray-400"
+                  >123 Green Street, Anytown, USA</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-400 text-sm mb-4 md:mb-0">
+            &copy; 2025 ExpiryBuddy. All rights reserved.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Cookie Policy</a
+            >
+          </div>
+          <div class="flex items-center mt-4 md:mt-0">
+            <div class="flex space-x-3">
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-visa-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-mastercard-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-paypal-fill text-gray-400 text-xl"></i>
+              </div>
+              <div class="w-8 h-5 flex items-center justify-center">
+                <i class="ri-apple-fill text-gray-400 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script id="custom-select-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const customSelects = document.querySelectorAll(".custom-select");
+        customSelects.forEach((select) => {
+          const selectedDiv = select.querySelector(".select-selected");
+          const itemsDiv = select.querySelector(".select-items");
+          const items = itemsDiv.querySelectorAll("div");
+
+          selectedDiv.addEventListener("click", function (e) {
+            e.stopPropagation();
+            closeAllSelect(this);
+            itemsDiv.classList.toggle("select-hide");
+            this.classList.toggle("select-arrow-active");
+          });
+
+          items.forEach((item) => {
+            item.addEventListener("click", function () {
+              const selectedSpan = selectedDiv.querySelector("span");
+              selectedSpan.textContent = this.textContent;
+              const sameAsSelected = itemsDiv.querySelector(".same-as-selected");
+              if (sameAsSelected) {
+                sameAsSelected.classList.remove("same-as-selected");
+              }
+              this.classList.add("same-as-selected");
+              selectedDiv.click();
+            });
+          });
+        });
+
+        function closeAllSelect(elmnt) {
+          const items = document.querySelectorAll(".select-items");
+          const selected = document.querySelectorAll(".select-selected");
+          items.forEach((item, idx) => {
+            if (elmnt != selected[idx]) {
+              item.classList.add("select-hide");
+              selected[idx].classList.remove("select-arrow-active");
+            }
+          });
+        }
+
+        document.addEventListener("click", closeAllSelect);
+      });
+    </script>
+
+    <script id="price-range-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const minRange = document.querySelector(".price-min-range");
+        const maxRange = document.querySelector(".price-max-range");
+        const rangeSelected = document.getElementById("price-range-selected");
+        const minValue = document.getElementById("price-min");
+        const maxValue = document.getElementById("price-max");
+        const minInput = document.getElementById("price-min-input");
+        const maxInput = document.getElementById("price-max-input");
+
+        function updateRangeValues() {
+          const minVal = parseInt(minRange.value);
+          const maxVal = parseInt(maxRange.value);
+
+          if (minVal > maxVal) {
+            minRange.value = maxVal;
+            return;
+          }
+
+          const leftPercent = (minVal / minRange.max) * 100;
+          const rightPercent = 100 - (maxVal / maxRange.max) * 100;
+
+          rangeSelected.style.left = leftPercent + "%";
+          rangeSelected.style.right = rightPercent + "%";
+
+          minValue.textContent = "$" + minVal;
+          maxValue.textContent = "$" + maxVal;
+          minInput.value = minVal;
+          maxInput.value = maxVal;
+        }
+
+        minRange.addEventListener("input", updateRangeValues);
+        maxRange.addEventListener("input", updateRangeValues);
+
+        minInput.addEventListener("input", function () {
+          let val = parseInt(this.value);
+          if (isNaN(val)) val = 0;
+          if (val > parseInt(maxInput.value)) val = parseInt(maxInput.value);
+          minRange.value = val;
+          updateRangeValues();
+        });
+
+        maxInput.addEventListener("input", function () {
+          let val = parseInt(this.value);
+          if (isNaN(val)) val = 50;
+          if (val < parseInt(minInput.value)) val = parseInt(minInput.value);
+          if (val > 50) val = 50;
+          maxRange.value = val;
+          updateRangeValues();
+        });
+
+        updateRangeValues();
+      });
+    </script>
+
+    <script id="rating-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const ratingInputs = document.querySelectorAll('input[name="rating"]');
+
+        ratingInputs.forEach((input) => {
+          input.addEventListener("change", function () {
+            // Reset all
+            ratingInputs.forEach((inp) => {
+              const parent = inp.parentElement;
+              const indicator = parent.querySelector(".w-3");
+              parent.querySelector(".w-5").classList.remove("border-primary");
+              parent.querySelector(".w-5").classList.add("border-gray-300");
+              indicator.classList.add("hidden");
+            });
+
+            // Set selected
+            if (this.checked) {
+              const parent = this.parentElement;
+              const indicator = parent.querySelector(".w-3");
+              parent.querySelector(".w-5").classList.remove("border-gray-300");
+              parent.querySelector(".w-5").classList.add("border-primary");
+              indicator.classList.remove("hidden");
+            }
+          });
+        });
+      });
+    </script>
+
+    <script id="mobile-filter-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButton = document.getElementById("filter-button");
+        const filterSidebar = document.getElementById("filter-sidebar");
+        const filterOverlay = document.getElementById("filter-overlay");
+        const closeFilterButton = document.getElementById("close-filter");
+
+        filterButton.addEventListener("click", function () {
+          filterSidebar.classList.add("active");
+          filterOverlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+
+        function closeFilter() {
+          filterSidebar.classList.remove("active");
+          filterOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+
+        closeFilterButton.addEventListener("click", closeFilter);
+        filterOverlay.addEventListener("click", closeFilter);
+      });
+    </script>
+
+    <script id="mobile-menu-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.getElementById("mobile-menu-button");
+
+        if (menuButton) {
+          menuButton.addEventListener("click", function () {
+            const mobileMenu = document.createElement("div");
+            mobileMenu.className =
+              "fixed inset-0 bg-gray-800 bg-opacity-90 z-50 flex flex-col";
+
+            const header = document.createElement("div");
+            header.className =
+              "flex justify-between items-center p-4 border-b border-gray-700";
+
+            const logo = document.createElement("div");
+            logo.className = "text-primary text-2xl font-['Pacifico']";
+            logo.textContent = "ExpiryBuddy";
+
+            const closeButton = document.createElement("button");
+            closeButton.className = "text-white text-2xl";
+            closeButton.innerHTML = '<i class="ri-close-line"></i>';
+
+            header.appendChild(logo);
+            header.appendChild(closeButton);
+
+            const nav = document.createElement("nav");
+            nav.className = "flex-1 overflow-y-auto p-4";
+
+            const links = [
+              {
+                text: "Home",
+                active: false,
+                url: "https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5",
+                dataReaddy: true,
+              },
+              { text: "Browse", active: true },
+              { text: "Upload", active: false },
+              { text: "Donations", active: false },
+              { text: "How It Works", active: false },
+              { text: "Our Impact", active: false },
+              { text: "Contact Us", active: false },
+            ];
+
+            const ul = document.createElement("ul");
+            ul.className = "space-y-4";
+
+            links.forEach((link) => {
+              const li = document.createElement("li");
+              const a = document.createElement("a");
+
+              if (link.url) {
+                a.href = link.url;
+                if (link.dataReaddy) {
+                  a.setAttribute("data-readdy", "true");
+                }
+              } else {
+                a.href = "#";
+              }
+
+              a.className = link.active
+                ? "text-primary text-xl font-medium block py-2"
+                : "text-white text-xl font-medium block py-2";
+              a.textContent = link.text;
+
+              li.appendChild(a);
+              ul.appendChild(li);
+            });
+
+            nav.appendChild(ul);
+            mobileMenu.appendChild(header);
+            mobileMenu.appendChild(nav);
+
+            document.body.appendChild(mobileMenu);
+            document.body.style.overflow = "hidden";
+
+            closeButton.addEventListener("click", function () {
+              document.body.removeChild(mobileMenu);
+              document.body.style.overflow = "";
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

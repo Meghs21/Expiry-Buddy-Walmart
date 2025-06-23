@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Upload Product</title>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center">
+
+        <!-- Left Text Section -->
+        <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+          <h2 class="text-3xl font-bold mb-4">Upload Your Products</h2>
+          <p class="text-gray-600 mb-6">
+            Are you a retailer with products approaching their expiry date?
+            List them on ExpiryBuddy to recover costs and reduce waste.
+          </p>
+
+          <div class="bg-green-50 p-4 rounded-lg mb-6">
+            <h4 class="font-bold mb-1">Quick and Easy</h4>
+            <p class="text-gray-600 text-sm">
+              Upload your products in less than 2 minutes with our streamlined form.
+            </p>
+          </div>
+
+          <div class="bg-green-50 p-4 rounded-lg mb-6">
+            <h4 class="font-bold mb-1">Recover Costs</h4>
+            <p class="text-gray-600 text-sm">
+              Turn potential losses into revenue by selling at discounted prices.
+            </p>
+          </div>
+
+          <div class="bg-green-50 p-4 rounded-lg mb-6">
+            <h4 class="font-bold mb-1">Reduce Waste</h4>
+            <p class="text-gray-600 text-sm">
+              Help the environment by reducing food waste and unnecessary disposal.
+            </p>
+          </div>
+
+          <a href="#product-upload-form" class="bg-green-600 text-white px-6 py-3 rounded font-medium hover:bg-green-700 transition-colors">Start Uploading Now</a>
+        </div>
+
+        <!-- Upload Form Section -->
+        <div class="md:w-1/2">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold mb-4">Product Upload Form</h3>
+
+            <form id="product-upload-form" action="/upload" method="POST">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" name="name" placeholder="Product Name" class="input" required />
+                <input type="text" name="category" placeholder="Category (e.g. Dairy)" class="input" required />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <input type="number" step="0.01" name="price" placeholder="Original Price" class="input" required />
+                <input type="number" step="0.01" name="discount" placeholder="Discount (%)" class="input" />
+                <input type="number" name="quantity" placeholder="Quantity" class="input" required />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="date" name="expiryDate" class="input" required />
+                <input type="text" name="location" placeholder="Store Location" class="input" required />
+              </div>
+
+              <textarea name="description" rows="3" placeholder="Describe your product..." class="input mb-4"></textarea>
+
+              <input type="text" name="imageUrl" placeholder="Image URL" class="input mb-4" required />
+
+              <div class="mb-4">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" name="isPerishable" class="mr-2">
+                  <span>This is a perishable item</span>
+                </label>
+              </div>
+
+              <div class="mb-6">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" name="donateIfUnsold" class="mr-2">
+                  <span>I agree to donate unsold items to local shelters</span>
+                </label>
+              </div>
+
+              <button type="submit" class="w-full bg-green-600 text-white py-3 rounded font-medium hover:bg-green-700 transition-colors">
+                Upload Product
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .input {
+      @apply w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400;
+    }
+  </style>
+  
+</body>
+</html>
