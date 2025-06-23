@@ -36,6 +36,21 @@ const Product = require("./models/Product");
 dotenv.config();
 const app = express();
 
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
+app.use(session({
+  secret: "expirybuddy-secret",
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: "sessions"
+  }),
+  cookie: { maxAge: 1000 * 60 * 60 } // 1 hour
+}));
+
+
 // 📌 Setup EJS view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "frontend", "views"));
@@ -75,9 +90,13 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-app.get("/", (req, res) => {
-  res.redirect("/signup");
+app.get("/signup", (req, res) => {
+  if (req.session.userId) {
+    return res.redirect("/home");
+  }
+  res.render("signup");
 });
+
 
 
 app.get("/upload", (req, res) => {
@@ -152,17 +171,23 @@ app.post("/signup", async (req, res) => {
 
   try {
     const existing = await User.findOne({ email });
-    if (existing) return res.send("User already exists");
+    if (existing) {
+      req.session.userId = existing._id;
+      return res.redirect("/home");
+    }
 
     const user = new User({ username, email, password });
     await user.save();
 
-    res.redirect("/home");  // 👈 Redirect to main page after signup
+    req.session.userId = user._id;
+    res.redirect("/home");
   } catch (err) {
     console.error(err);
     res.send("❌ Signup failed");
   }
 });
+
+
 
 
 
