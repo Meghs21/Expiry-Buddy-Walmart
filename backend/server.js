@@ -77,15 +77,16 @@ app.use("/api/products", productRoutes);
 
 // ORIGINALL HOMEEEE
 
-// app.get("/", async (req, res) => {
-//   try {
-//     const products = await Product.find();
-//     res.render("home", { products });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Failed to load products");
-//   }
-// });
+app.get("/", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.render("home", { products });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to load products");
+  }
+});
+
 app.get("/signup", (req, res) => {
   res.render("signup");
 });

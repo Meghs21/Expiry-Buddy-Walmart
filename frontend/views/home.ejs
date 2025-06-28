@@ -152,6 +152,17 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
+          transition: all 0.2s ease;
+      }
+       .select-selected:hover {
+           border-color: #4CAF50;
+           box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.2);
+       }
+       .select-selected i {
+           transition: transform 0.3s ease;
+       }
+       .select-selected.select-arrow-active i {
+           transform: rotate(180deg);
       }
       .select-items {
           position: absolute;
@@ -165,20 +176,28 @@
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
           max-height: 250px;
           overflow-y: auto;
-          display: none;
+          transition: opacity 0.3s ease, transform 0.3s ease;
       }
       .select-items div {
           padding: 10px 16px;
           cursor: pointer;
+          transition: background-color 0.2s ease;
+
       }
       .select-items div:hover {
           background-color: rgba(76, 175, 80, 0.1);
       }
+      .select-items div:active {
+          background-color: rgba(76, 175, 80, 0.2);
+      }
       .select-hide {
-          display: none;
+          display: none !important;
+          opacity: 0;
+          transform: translateY(-10px);
       }
       .same-as-selected {
           background-color: rgba(76, 175, 80, 0.1);
+          font-weight: 500;
       }
       .range-slider {
           width: 100%;
@@ -228,6 +247,41 @@
           pointer-events: auto;
           -moz-appearance: none;
           cursor: pointer;
+      }
+      
+      /* Pagination and Slide Navigation Styles */
+      #slide-prev, #slide-next {
+          transition: all 0.3s ease;
+          opacity: 0.7;
+      }
+      
+      #slide-prev:hover, #slide-next:hover {
+          opacity: 1;
+          transform: translateY(-50%) scale(1.1);
+      }
+      
+      #slide-prev:disabled, #slide-next:disabled {
+          cursor: not-allowed;
+      }
+      
+      #pagination-numbers {
+          transition: all 0.3s ease;
+      }
+      
+      #pagination-numbers button {
+          transition: all 0.2s ease;
+      }
+      
+      #pagination-numbers button:hover {
+          transform: translateY(-2px);
+      }
+      
+      #scroll-left, #scroll-right {
+          transition: all 0.2s ease;
+      }
+      
+      #scroll-left:hover, #scroll-right:hover {
+          transform: scale(1.1);
       }
     </style>
   </head>
@@ -328,38 +382,38 @@
                 <div
                   class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
                 >
-                  <i class="ri-leaf-line text-primary text-xl"></i>
-                </div>
-                <div>
-                  <p class="text-2xl font-bold text-primary">2,450 kg</p>
-                  <p class="text-sm text-gray-600">Food saved</p>
-                </div>
-              </div>
+                   <i class="ri-leaf-line text-primary text-xl"></i>
+                 </div>
+                 <div>
+                   <p class="text-2xl font-bold text-primary" id="food-saved-counter">0 kg</p>
+                   <p class="text-sm text-gray-600">Food saved</p>
+                 </div>
+               </div>
 
               <div class="flex items-center">
                 <div
                   class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
                 >
                   <i class="ri-store-2-line text-primary text-xl"></i>
-                </div>
-                <div>
-                  <p class="text-2xl font-bold text-primary">85+</p>
-                  <p class="text-sm text-gray-600">Local retailers</p>
-                </div>
-              </div>
+                 </div>
+                 <div>
+                   <p class="text-2xl font-bold text-primary" id="retailers-counter">0</p>
+                   <p class="text-sm text-gray-600">Local retailers</p>
+                 </div>
+               </div>
 
               <div class="flex items-center">
                 <div
                   class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-3"
                 >
                   <i class="ri-hand-heart-line text-primary text-xl"></i>
-                </div>
-                <div>
-                  <p class="text-2xl font-bold text-primary">320</p>
-                  <p class="text-sm text-gray-600">Donations made</p>
-                </div>
-              </div>
-            </div>
+                 </div>
+                 <div>
+                <p class="text-2xl font-bold text-primary" id="donations-counter">0</p>
+                   <p class="text-sm text-gray-600">Donations made</p>
+                 </div>
+               </div>
+               </div>
           </div>
 
           <div class="md:w-1/2 flex justify-center">
@@ -377,6 +431,8 @@
       <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
         <div class="flex flex-col md:flex-row md:items-center gap-4 flex-wrap">
           <div class="md:w-48">
+            
+
             <div class="custom-select">
               <div class="select-selected">
                 <span>All Categories</span>
@@ -443,10 +499,10 @@
                 <i class="ri-arrow-down-s-line"></i>
               </div>
               <div class="select-items select-hide">
-                <div>Sort by: Expiry Date</div>
-                <div>Sort by: Discount %</div>
-                <div>Sort by: Price (Low to High)</div>
-                <div>Sort by: Price (High to Low)</div>
+                <div>Expiry Date</div>
+                <div>Discount %</div>
+                <div>Price (Low to High)</div>
+                <div>Price (High to Low)</div>
               </div>
             </div>
           </div>
@@ -465,18 +521,64 @@
           </div>
         </div>
       </div>
-       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
-    <% products.forEach(product => { %>
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover rounded" />
-      <h2 class="text-xl font-bold mt-2"><%= product.name %></h2>
-      <p class="text-gray-700"><%= product.category %> | <%= product.location %></p>
-      <p class="mt-1 text-sm">Expires: <%= new Date(product.expiryDate).toLocaleDateString() %></p>
-      <p class="text-green-600 font-semibold mt-1">₹<%= product.finalPrice || product.price %></p>
-      <p class="text-sm text-gray-500">Discount: <%= product.discount %>%</p>
-    </div>
-  <% }); %>
-</div>
+      <!-- Pagination Controls -->
+      <div class="flex justify-center mb-6">
+        <div class="inline-flex items-center bg-white rounded-lg shadow-sm">
+          <button id="prev-page" class="px-4 py-2 text-gray-600 hover:text-primary border-r border-gray-200">
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          
+          <!-- Left Scroll Arrow (initially hidden) -->
+          <button id="scroll-left" class="px-3 py-2 text-gray-600 hover:text-primary hidden">
+            <i class="ri-arrow-left-line"></i>
+          </button>
+          
+          <div id="pagination-numbers" class="flex overflow-hidden">
+            <!-- Pagination numbers will be inserted here by JavaScript -->
+          </div>
+          
+          <!-- Right Scroll Arrow (initially hidden) -->
+          <button id="scroll-right" class="px-3 py-2 text-gray-600 hover:text-primary hidden">
+            <i class="ri-arrow-right-line"></i>
+          </button>
+          
+          <button id="next-page" class="px-4 py-2 text-gray-600 hover:text-primary border-l border-gray-200">
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Grid with Side Arrows -->
+      <div class="relative">
+        <!-- Left Arrow -->
+        <button id="slide-prev" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-md w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary hover:shadow-lg focus:outline-none">
+          <i class="ri-arrow-left-s-line text-xl"></i>
+        </button>
+        
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 px-12">
+          <% 
+          // Load all products into the DOM but only show first 6 initially
+          products.forEach((product, i) => { 
+            const isVisible = i < 6; // Only first 6 are visible initially
+          %>
+              <div class="bg-white rounded-lg shadow-md p-4 product-item <%= isVisible ? '' : 'hidden' %>" data-index="<%= i %>">
+              <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover rounded" />
+              <h2 class="text-xl font-bold mt-2"><%= product.name %></h2>
+              <p class="text-gray-700"><%= product.category %> | <%= product.location %></p>
+              <p class="mt-1 text-sm">Expires: <%= new Date(product.expiryDate).toLocaleDateString() %></p>
+              <p class="text-green-600 font-semibold mt-1">₹<%= product.finalPrice || product.price %></p>
+              <p class="text-sm text-gray-500">Discount: <%= product.discount %>%</p>
+            </div>
+          <% }); %>
+        </div>
+        
+        <!-- Right Arrow -->
+        <button id="slide-next" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full shadow-md w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary hover:shadow-lg focus:outline-none">
+          <i class="ri-arrow-right-s-line text-xl"></i>
+        </button>
+      </div>
+      </div>
 
 
     <section class="py-16 bg-green-50">
@@ -491,33 +593,29 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-            <div class="text-4xl font-bold text-primary mb-2">2,450 kg</div>
+            <div class="text-4xl font-bold text-primary mb-2">0 kg</div>
             <p class="text-gray-600">Food Saved</p>
           </div>
 
           <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-            <div class="text-4xl font-bold text-primary mb-2">$12,800</div>
+            <div class="text-4xl font-bold text-primary mb-2">Rs 0</div>
             <p class="text-gray-600">Customer Savings</p>
           </div>
 
           <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-            <div class="text-4xl font-bold text-primary mb-2">320</div>
+            <div class="text-4xl font-bold text-primary mb-2">0</div>
             <p class="text-gray-600">Donations Made</p>
           </div>
 
           <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-            <div class="text-4xl font-bold text-primary mb-2">85+</div>
+            <div class="text-4xl font-bold text-primary mb-2">0+</div>
             <p class="text-gray-600">Participating Retailers</p>
           </div>
         </div>
 
-        <div class="mt-12 bg-white p-6 rounded-lg shadow-sm">
-          <h3 class="text-xl font-bold mb-4 text-center">
-            Environmental Impact
-          </h3>
-          <div id="impact-chart" class="w-full h-80"></div>
-        </div>
-      </div>
+        <div class="mt-12 bg-white p-6 rounded-lg shadow-sm hidden">
+  <!-- ...content... -->
+</div>
     </section>
 
     <section class="py-16 bg-white">
@@ -542,79 +640,11 @@
               </div>
             </div>
             <p class="text-gray-600 mb-4">
-              "I've saved over $200 on groceries in the past month using
-              ExpiryBuddy. The products are great quality and I love that I'm
-              helping reduce waste."
-            </p>
-            <div class="flex items-center">
-              <div
-                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
-              >
-                <i class="ri-user-line text-primary"></i>
-              </div>
-              <div>
-                <p class="font-medium">Rebecca Thompson</p>
-                <p class="text-sm text-gray-500">Shopper</p>
-              </div>
-            </div>
-          </div>
+                "We built ExpiryBuddy to help people save serious money on groceries while also reducing food waste. Seeing users save over $200 in just a month? That’s exactly why we do what we do. Quality products + good vibes + saving the planet = win-win."
 
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <div class="flex items-center mb-4">
-              <div class="text-yellow-400 flex">
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-              </div>
-            </div>
-            <p class="text-gray-600 mb-4">
-              "As a small grocery store owner, ExpiryBuddy has helped us recover
-              costs on products we would have thrown away. It's a win-win for
-              everyone."
             </p>
-            <div class="flex items-center">
-              <div
-                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
-              >
-                <i class="ri-user-line text-primary"></i>
-              </div>
-              <div>
-                <p class="font-medium">Michael Rodriguez</p>
-                <p class="text-sm text-gray-500">Retailer</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <div class="flex items-center mb-4">
-              <div class="text-yellow-400 flex">
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-fill"></i>
-                <i class="ri-star-half-fill"></i>
-              </div>
-            </div>
-            <p class="text-gray-600 mb-4">
-              "Our animal shelter has benefited greatly from the donation
-              program. We receive quality food that would otherwise go to waste,
-              helping us care for more animals."
-            </p>
-            <div class="flex items-center">
-              <div
-                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3"
-              >
-                <i class="ri-user-line text-primary"></i>
-              </div>
-              <div>
-                <p class="font-medium">Jennifer Wilson</p>
-                <p class="text-sm text-gray-500">Shelter Manager</p>
-              </div>
-            </div>
-          </div>
-        </div>
+            
+          
       </div>
     </section>
 
@@ -811,49 +841,97 @@
 
     <script id="custom-select-script">
       document.addEventListener("DOMContentLoaded", function () {
+        // Initialize all custom select elements
         const customSelects = document.querySelectorAll(".custom-select");
-
+        
         customSelects.forEach((select) => {
           const selectedDiv = select.querySelector(".select-selected");
           const itemsDiv = select.querySelector(".select-items");
           const items = itemsDiv.querySelectorAll("div");
-
+          
+          // Set the first option as selected by default
+          if (items.length > 0) {
+            items[0].classList.add("same-as-selected");
+          }
+          
+          // Toggle dropdown when clicking the select header
           selectedDiv.addEventListener("click", function (e) {
             e.stopPropagation();
+            
+            // Close any other open dropdowns
             closeAllSelect(this);
+            
+            // Toggle this dropdown
             itemsDiv.classList.toggle("select-hide");
+            
+            // Add visual indicator for open state
             this.classList.toggle("select-arrow-active");
+            
+            // Add animation
+            if (!itemsDiv.classList.contains("select-hide")) {
+              itemsDiv.style.display = "block";
+              itemsDiv.style.opacity = "0";
+              itemsDiv.style.transform = "translateY(-10px)";
+              setTimeout(() => {
+                itemsDiv.style.opacity = "1";
+                itemsDiv.style.transform = "translateY(0)";
+              }, 10);
+            }
           });
-
+          
+          // Handle option selection
           items.forEach((item) => {
-            item.addEventListener("click", function () {
+            item.addEventListener("click", function (e) {
+              e.stopPropagation();
+              
+              // Update the selected text
               const selectedSpan = selectedDiv.querySelector("span");
               selectedSpan.textContent = this.textContent;
-
+              
+              // Update the selected styling
               const sameAsSelected = itemsDiv.querySelector(".same-as-selected");
               if (sameAsSelected) {
                 sameAsSelected.classList.remove("same-as-selected");
               }
               this.classList.add("same-as-selected");
-
-              selectedDiv.click();
+              
+              // Trigger a custom event for category change
+              const event = new CustomEvent("categoryChanged", {
+                detail: { category: this.textContent }
+              });
+              select.dispatchEvent(event);
+              
+              // Close the dropdown
+              itemsDiv.classList.add("select-hide");
+              selectedDiv.classList.remove("select-arrow-active");
             });
           });
         });
-
+        
+        // Function to close all select dropdowns except the current one
         function closeAllSelect(elmnt) {
           const items = document.querySelectorAll(".select-items");
           const selected = document.querySelectorAll(".select-selected");
-
+          
           items.forEach((item, idx) => {
-            if (elmnt != selected[idx]) {
+            if (elmnt !== selected[idx]) {
               item.classList.add("select-hide");
               selected[idx].classList.remove("select-arrow-active");
             }
           });
         }
-
+        
+        // Close all dropdowns when clicking outside
         document.addEventListener("click", closeAllSelect);
+        
+        // Listen for category changes
+        const categorySelect = document.querySelector(".custom-select");
+        if (categorySelect) {
+          categorySelect.addEventListener("categoryChanged", function(e) {
+            console.log("Category changed to:", e.detail.category);
+            // You can add filtering logic here based on the selected category
+          });
+        }
       });
     </script>
 
@@ -1131,6 +1209,169 @@
             });
           });
         }
+      });
+    </script>
+
+    <script id="pagination-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        // Pagination configuration
+        const productsPerPage = 6;
+        let currentPage = 1;
+        
+        // Get all products (they're already in the DOM but hidden)
+        const allProducts = Array.from(document.querySelectorAll('.product-item'));
+        const totalProducts = allProducts.length;
+        const totalPages = Math.ceil(totalProducts / productsPerPage);
+        
+        // Get pagination elements
+        const paginationNumbers = document.getElementById('pagination-numbers');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        const scrollLeftButton = document.getElementById('scroll-left');
+        const scrollRightButton = document.getElementById('scroll-right');
+        
+        // Get slide navigation buttons
+        const slidePrevButton = document.getElementById('slide-prev');
+        const slideNextButton = document.getElementById('slide-next');
+        
+        // Maximum number of page buttons to show at once
+        const maxVisibleButtons = 5;
+        
+        // Initialize pagination
+        function initPagination() {
+          // Create pagination numbers
+          createPaginationNumbers();
+          
+          // Show products for the first page
+          showProductsForPage(1);
+          
+          // Add event listeners for pagination
+          prevButton.addEventListener('click', goToPreviousPage);
+          nextButton.addEventListener('click', goToNextPage);
+          scrollLeftButton.addEventListener('click', scrollPaginationLeft);
+          scrollRightButton.addEventListener('click', scrollPaginationRight);
+          
+          // Add event listeners for slide navigation
+          slidePrevButton.addEventListener('click', goToPreviousPage);
+          slideNextButton.addEventListener('click', goToNextPage);
+          
+          // Update button states
+          updateButtonStates();
+        }
+        
+        // Create pagination number buttons
+        function createPaginationNumbers() {
+          paginationNumbers.innerHTML = '';
+          
+          // Determine which page numbers to show
+          let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+          let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+          
+          // Adjust start page if we're near the end
+          if (endPage - startPage + 1 < maxVisibleButtons) {
+            startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+          }
+          
+          // Show/hide scroll arrows based on whether there are hidden pages
+          scrollLeftButton.style.display = startPage > 1 ? 'block' : 'none';
+          scrollRightButton.style.display = endPage < totalPages ? 'block' : 'none';
+          
+          // Create page buttons
+          for (let i = startPage; i <= endPage; i++) {
+            addPageButton(i);
+          }
+        }
+        
+        // Add a page number button
+        function addPageButton(pageNum) {
+          const button = document.createElement('button');
+          button.className = 'px-4 py-2 ' + 
+                            (pageNum === currentPage 
+                              ? 'bg-primary text-white' 
+                              : 'text-gray-600 hover:text-primary');
+          button.textContent = pageNum;
+          button.addEventListener('click', () => goToPage(pageNum));
+          paginationNumbers.appendChild(button);
+        }
+        
+        // Scroll pagination left (show earlier page numbers)
+        function scrollPaginationLeft() {
+          const newPage = Math.max(1, currentPage - maxVisibleButtons);
+          goToPage(newPage);
+        }
+        
+        // Scroll pagination right (show later page numbers)
+        function scrollPaginationRight() {
+          const newPage = Math.min(totalPages, currentPage + maxVisibleButtons);
+          goToPage(newPage);
+        }
+        
+        // Show products for the specified page
+        function showProductsForPage(pageNum) {
+          // Hide all products
+          allProducts.forEach(product => {
+            product.style.display = 'none';
+          });
+          
+          // Calculate start and end indices
+          const startIndex = (pageNum - 1) * productsPerPage;
+          const endIndex = Math.min(startIndex + productsPerPage, totalProducts);
+          
+          // Show products for current page
+          for (let i = startIndex; i < endIndex; i++) {
+            if (allProducts[i]) {
+              allProducts[i].style.display = 'block';
+            }
+          }
+        }
+        
+        // Go to a specific page
+        function goToPage(pageNum) {
+          currentPage = pageNum;
+          showProductsForPage(currentPage);
+          createPaginationNumbers();
+          updateButtonStates();
+          
+          // Scroll to top of product section for better UX
+          const productSection = document.querySelector('.product-item').closest('.relative');
+          if (productSection) {
+            productSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+        
+        // Go to previous page
+        function goToPreviousPage() {
+          if (currentPage > 1) {
+            goToPage(currentPage - 1);
+          }
+        }
+        
+        // Go to next page
+        function goToNextPage() {
+          if (currentPage < totalPages) {
+            goToPage(currentPage + 1);
+          }
+        }
+        
+        // Update button states
+        function updateButtonStates() {
+          // Update pagination navigation buttons
+          prevButton.disabled = currentPage === 1;
+          prevButton.style.opacity = currentPage === 1 ? '0.5' : '1';
+          
+          nextButton.disabled = currentPage === totalPages;
+          nextButton.style.opacity = currentPage === totalPages ? '0.5' : '1';
+          
+          // Update slide navigation buttons
+          slidePrevButton.disabled = currentPage === 1;
+          slidePrevButton.style.opacity = currentPage === 1 ? '0.5' : '1';
+          
+          slideNextButton.disabled = currentPage === totalPages;
+          slideNextButton.style.opacity = currentPage === totalPages ? '0.5' : '1';
+        }
+        
+        // Initialize pagination
+        initPagination();
       });
     </script>
   </body>
