@@ -48,19 +48,6 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  views: {
-    type: Number,
-    default: 0
-  },
-  
-  clicks: {
-    type: Number,
-    default: 0
-  },
-  wishlistCount: {
-    type: Number,
-    default: 0
-  },
   isSold: {
     type: Boolean,
     default: false

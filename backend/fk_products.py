@@ -66,9 +66,6 @@ for _ in range(200):
 
     final_price = round(price - (price * discount / 100), 2)
 
-    # Views/clicks influenced by discount
-    views = random.randint(50, 200) if discount >= 50 else random.randint(5, 50)
-    clicks = random.randint(20, 100) if discount >= 50 else random.randint(0, 20)
 
     product = {
         "name": name,
@@ -83,9 +80,6 @@ for _ in range(200):
         "sellerName": random.choice(retailers),
         "location": faker.city(),
         "createdAt": datetime.now(),
-        "views": views,
-        "clicks": clicks,
-        "wishlistCount": random.randint(0, 30),
         "isSold": False
     }
 

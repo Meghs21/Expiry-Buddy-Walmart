@@ -1,3 +1,4 @@
+// 🔧 Import required modules
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { faker } = require("@faker-js/faker");
@@ -5,6 +6,7 @@ const { faker } = require("@faker-js/faker");
 const Product = require("../models/Product");
 const ProductHistory = require("../models/ProductHistory");
 
+// 🔌 Connect to MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -15,24 +17,64 @@ const connectDB = async () => {
   }
 };
 
+// 📦 Generate multiple fake sale history records for a product
 const generateHistoryFromProduct = (product) => {
   const historyCount = faker.number.int({ min: 3, max: 10 });
   const histories = [];
 
   for (let i = 0; i < historyCount; i++) {
-    const discount = faker.number.int({ min: 0, max: 60 });
-    const soldInDays = faker.number.int({ min: 1, max: 30 });
-    const dateSold = new Date(product.createdAt || Date.now());
-dateSold.setDate(dateSold.getDate() + soldInDays);
+    const expiryDate = new Date(product.expiryDate);
+    const isPerishable = product.is_perishable !== false;
 
+    // 💡 Decide if product was sold (85% chance)
+    const wasSold = Math.random() < 0.85;
 
+    let soldInDays = null;
+    let dateSold = null;
+    let discount = 0;
+    let finalPrice = product.price;
+
+    if (wasSold) {
+      // ⏳ Sold before expiry
+      soldInDays = faker.number.int({ min: 1, max: 30 });
+      dateSold = new Date(expiryDate);
+      dateSold.setDate(expiryDate.getDate() - soldInDays);
+
+      const daysLeft = Math.max(
+        Math.floor((expiryDate - dateSold) / (1000 * 60 * 60 * 24)),
+        0
+      );
+
+      // 🧠 Discount logic based on perishability and days left
+      if (isPerishable) {
+        if (daysLeft <= 2) {
+          discount = faker.number.int({ min: 50, max: 90 });
+        } else if (daysLeft <= 5) {
+          discount = faker.number.int({ min: 20, max: 50 });
+        } else {
+          discount = faker.number.int({ min: 0, max: 15 });
+        }
+      } else {
+        if (daysLeft <= 2) {
+          discount = faker.number.int({ min: 20, max: 40 });
+        } else if (daysLeft <= 5) {
+          discount = faker.number.int({ min: 5, max: 20 });
+        } else {
+          discount = faker.number.int({ min: 0, max: 10 });
+        }
+      }
+
+      finalPrice = parseFloat((product.price * (1 - discount / 100)).toFixed(2));
+    }
+
+    // 📄 Push one fake record into array
     histories.push({
       productId: product._id,
       name: product.name,
       category: product.category,
       price: product.price,
       discount,
-      finalPrice: parseFloat((product.price * (1 - discount / 100)).toFixed(2)),
+      finalPrice,
       quantity: faker.number.int({ min: 1, max: 20 }),
       views: faker.number.int({ min: 0, max: 200 }),
       clicks: faker.number.int({ min: 0, max: 200 }),
@@ -40,20 +82,21 @@ dateSold.setDate(dateSold.getDate() + soldInDays);
       sellerName: product.sellerName,
       location: product.location,
       expiryDate: product.expiryDate,
+      is_perishable: isPerishable,
       soldInDays,
       dateSold,
-      wasSold: true,
-      createdAt: dateSold
+      wasSold
     });
   }
 
   return histories;
 };
 
+// 🚀 Insert all generated fake history records into MongoDB
 const insertFakeHistories = async () => {
   try {
     await ProductHistory.deleteMany({});
-    console.log("🗑 Cleared old ProductHistory data");
+    console.log("🗑️ Cleared old ProductHistory data");
 
     const products = await Product.find({});
     const allHistories = [];
@@ -72,6 +115,7 @@ const insertFakeHistories = async () => {
   }
 };
 
+// 🏁 Entry point
 (async () => {
   await connectDB();
   await insertFakeHistories();
