@@ -51,5 +51,38 @@ router.post("/archiveExpired", async (req, res) => {
   }
 });
 
+// ➕ New: Increment views
+router.get("/view/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).send("❌ Product not found");
+
+    product.views += 1;
+    await product.save();
+
+    res.redirect(`/products/${product._id}`); // redirect to existing detail route
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Failed to update views");
+  }
+});
+
+// ➕ New: Add to wishlist
+router.post("/wishlist/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).send("❌ Product not found");
+
+    product.wishlistCount += 1;
+    await product.save();
+
+    res.json({ message: "✅ Added to wishlist" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Failed to update wishlist count");
+  }
+});
+
+
 // ✅ Export everything at the end
 module.exports = router;

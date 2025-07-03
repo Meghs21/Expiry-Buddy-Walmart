@@ -1,31 +1,3 @@
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const dotenv = require("dotenv");
-// const productRoutes = require("./routes/productRoutes");
-
-// dotenv.config();
-// const app = express();
-
-// // Middleware to parse JSON
-// app.use(express.json());
-
-// // MongoDB connection
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log("✅ MongoDB Connected"))
-//   .catch((err) => console.error("❌ MongoDB connection error:", err));
-
-// // API Routes
-// app.use("/api/products", productRoutes);
-
-// // Test route
-// app.get("/", (req, res) => {
-//   res.send("🟢 API is running");
-// });
-
-// // Start the server
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -33,6 +5,11 @@ const path = require("path"); // 👉 to handle path to views
 const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
 const productHistoryRoutes = require("./routes/productHistoryRoutes");
+const customerAuthRoutes = require("./routes/authRoutes");
+const retailerRoutes = require("./routes/retailerRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+
 dotenv.config();
 const app = express();
 
@@ -62,18 +39,22 @@ app.use(express.json());
 // Middleware to parse form data from <form> submissions (like signup)
 app.use(express.urlencoded({ extended: true }));
 
+//middleware for auth
+app.use("/auth", customerAuthRoutes);
+
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // API Routes
 app.use("/api/products", productRoutes);
 app.use("/api/history", productHistoryRoutes);
-// 👇 Render the EJS page on root URL
-// app.get("/", (req, res) => {
-//   res.render("home"); // renders home.ejs from frontend/views/
-// });
+app.use("/api", retailerRoutes);
+app.use("/wishlist", wishlistRoutes);
+//app.use("/cart", cartRoutes);
+
 
 // ORIGINALL HOMEEEE
 
@@ -87,8 +68,12 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/signup", (req, res) => {
-  res.render("signup");
+app.get("/retailer", (req, res) => {
+res.render("retailer");
+});
+
+app.get("/wishlist", (req, res) => {
+  res.render("wishlist");
 });
 
 app.get("/signup", (req, res) => {
@@ -98,6 +83,17 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+// Logout route
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("❌ Error during logout:", err);
+      return res.status(500).send("Logout failed");
+    }
+    res.clearCookie("connect.sid");
+    res.redirect("/signup"); // or homepage or login page
+  });
+});
 
 
 app.get("/upload", (req, res) => {
@@ -167,29 +163,26 @@ app.get("/home", async (req, res) => {
 
 // POST signup form
 
-app.post("/signup", async (req, res) => {
-  const { username, email, password } = req.body;
+// app.post("/signup", async (req, res) => {
+//   const { username, email, password } = req.body;
 
-  try {
-    const existing = await User.findOne({ email });
-    if (existing) {
-      req.session.userId = existing._id;
-      return res.redirect("/home");
-    }
+//   try {
+//     const existing = await User.findOne({ email });
+//     if (existing) {
+//       req.session.userId = existing._id;
+//       return res.redirect("/home");
+//     }
 
-    const user = new User({ username, email, password });
-    await user.save();
+//     const user = new User({ username, email, password });
+//     await user.save();
 
-    req.session.userId = user._id;
-    res.redirect("/home");
-  } catch (err) {
-    console.error(err);
-    res.send("❌ Signup failed");
-  }
-});
-
-
-
+//     req.session.userId = user._id;
+//     res.redirect("/home");
+//   } catch (err) {
+//     console.error(err);
+//     res.send("❌ Signup failed");
+//   }
+// });
 
 
 // Start the server

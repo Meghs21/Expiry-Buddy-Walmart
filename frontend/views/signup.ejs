@@ -299,7 +299,7 @@
         <!-- CUSTOMER SECTION (LEFT SIDE) -->
         <div class="form-container sign-in-container">
             <!-- Customer Login Form -->
-            <form action="#" id="customerLoginForm" class="active-form">
+            <form action="/auth/customers/login" method="POST" id="customerLoginForm" class="active-form">
                 <h1>Customer Login</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -307,15 +307,16 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your account</span>
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+              <input type="email" name="email" placeholder="Email" required />
+              <input type="password" name="password" placeholder="Password" required />
                 <a href="#">Forgot your password?</a>
                 <button>Login</button>
                 <p class="signup-link">Don't have an account? <a href="#" id="customerSignUpLink">Sign up</a></p>
             </form>
 
-            <!-- Customer Sign Up Form -->
-            <form action="#" id="customerSignUpForm" class="hidden-form">
+            <!-- customer signup -->
+            <!-- <form action="/auth/customer-signup" id="customerSignUpForm" class="hidden-form"> -->
+                <form action="/auth/customers/signup" method="POST" id="customerSignUpForm" class="hidden-form">
                 <h1>Create Customer Account</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -323,19 +324,39 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registration</span>
-                <input type="text" placeholder="Full Name" />
-                <input type="email" placeholder="Email" />
-                <input type="tel" placeholder="Phone Number" />
-                <input type="password" placeholder="Password" />
+                <input type="text" name="fullName" placeholder="Full Name" required />
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="tel" name="phone" placeholder="Phone Number" />
+                <input type="password" name="password" placeholder="Password" required />
+
                 <button>Sign Up</button>
                 <p class="login-link">Already have an account? <a href="#" id="customerLoginLink">Login</a></p>
             </form>
-        </div>
+        </div> 
+
+              <!-- Customer Sign Up Form
+<form action="/auth/customer-signup" method="POST" id="customerSignUpForm" class="hidden-form">
+  <h1>Create Customer Account</h1>
+  <div class="social-container">
+    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+  </div>
+  <span>or use your email for registration</span>
+  <input type="text" name="username" placeholder="Full Name" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="tel" name="phone" placeholder="Phone Number" />
+  <input type="password" name="password" placeholder="Password" required />
+  <button type="submit">Sign Up</button>
+  <p class="login-link">Already have an account? <a href="#" id="customerLoginLink">Login</a></p>
+</form> -->
+
+
 
         <!-- RETAILER SECTION (RIGHT SIDE) -->
         <div class="form-container sign-up-container">
             <!-- Retailer Login Form -->
-            <form action="#" id="retailerLoginForm" class="active-form">
+            <form action="/api/retailers/login" method="POST" id="retailerLoginForm" class="active-form">
                 <h1>Retailer Login</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -343,15 +364,15 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your business account</span>
-                <input type="email" placeholder="Business Email" />
-                <input type="password" placeholder="Password" />
+                <input type="email" name="email" placeholder="Business Email" required />
+                <input type="password" name="password" placeholder="Password" required />
                 <a href="#">Forgot your password?</a>
-                <button>Login</button>
+                <button type="Submit">Login</button>
                 <p class="signup-link">Don't have an account? <a href="#" id="retailerSignUpLink">Sign up</a></p>
             </form>
 
             <!-- Retailer Sign Up Form -->
-            <form action="#" id="retailerSignUpForm" class="hidden-form">
+            <form action="/api/retailers/signup" method="POST" id="retailerSignUpForm" class="hidden-form">
                 <h1>Create Retailer Account</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -359,11 +380,11 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or register your business</span>
-                <input type="text" placeholder="Business Name" />
-                <input type="text" placeholder="License Number" />
-                <input type="email" placeholder="Business Email" />
-                <input type="password" placeholder="Password" />
-                <button>Sign Up</button>
+                <input type="text" name="businessName" placeholder="Business Name" />
+                <input type="text" name="licenseNumber" placeholder="License Number" />
+                <input type="email" name="email" placeholder="Business Email" />
+                <input type="password" name="password" placeholder="Password" />
+                <button type="Submit">Sign Up</button>
                 <p class="login-link">Already have an account? <a href="#" id="retailerLoginLink">Login</a></p>
             </form>
         </div>
@@ -447,6 +468,7 @@
             retailerLoginForm.classList.remove('hidden-form');
             retailerLoginForm.classList.add('active-form');
         });
+
     </script>
 </body>
 </html>

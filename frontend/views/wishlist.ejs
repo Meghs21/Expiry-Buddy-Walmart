@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Wishlist - ExpiryBuddy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#4CAF50", secondary: "#FFA726" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Roboto', sans-serif;
+          color: #333333;
+          background-color: #F5F5F5;
+      }
+      h1, h2, h3, h4, h5, h6 {
+          font-family: 'Inter', sans-serif;
+      }
+      .logo {
+          font-family: 'Pacifico', serif;
+      }
+
+      .wishlist-item {
+        transition: all 0.3s ease;
+      }
+      
+      .wishlist-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      .remove-btn {
+        transition: all 0.2s ease;
+      }
+      
+      .remove-btn:hover {
+        transform: scale(1.1);
+      }
+      
+      .empty-state {
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .wishlist-actions {
+        position: sticky;
+        top: 80px;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header (same as home page) -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="container mx-auto px-4 flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <a href="/" class="text-primary text-2xl font-['Pacifico'] mr-8">ExpiryBuddy</a>
+          <nav class="hidden md:flex space-x-6">
+            <a href="/browse" class="text-gray-600 hover:text-primary font-medium">Browse</a>
+            <a href="/upload" class="text-gray-600 hover:text-primary font-medium">Upload</a>
+            <a href="#" class="text-gray-600 hover:text-primary font-medium">Donations</a>
+          </nav>
+        </div>
+
+        <div class="flex-1 max-w-md mx-4 hidden md:block">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search products, categories, or locations..."
+              class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            />
+            <div class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400">
+              <i class="ri-search-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
+            <i class="ri-notification-3-line text-xl"></i>
+          </button>
+          <button class="w-10 h-10 flex items-center justify-center text-primary rounded-full bg-green-50">
+            <i class="ri-heart-line text-xl"></i>
+          </button>
+          <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
+            <i class="ri-user-line text-xl"></i>
+          </button>
+          <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
+            <i class="ri-menu-line text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="md:hidden px-4 py-2 bg-white border-t border-gray-100">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search..."
+            class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+          />
+          <div class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400">
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-gray-100">
+      <div class="container mx-auto px-4 py-3">
+        <nav class="flex items-center space-x-2 text-sm">
+          <a href="/" class="text-gray-500 hover:text-primary">Home</a>
+          <i class="ri-arrow-right-s-line text-gray-400"></i>
+          <span class="text-primary font-medium">My Wishlist</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+      <!-- Page Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold mb-2">My Wishlist</h1>
+          <p class="text-gray-600">Save your favorite products and never miss a great deal</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex items-center space-x-4">
+          <span id="wishlist-count" class="text-sm text-gray-500">5 items saved</span>
+          <button id="clear-all-btn" class="text-sm text-red-500 hover:text-red-700 font-medium">
+            Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- Wishlist Actions Bar -->
+      <div class="wishlist-actions bg-white rounded-lg shadow-sm p-4 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-4">
+            <label class="flex items-center">
+              <input type="checkbox" id="select-all" class="mr-2 rounded border-gray-300 text-primary focus:ring-primary">
+              <span class="text-sm text-gray-600">Select All</span>
+            </label>
+            <button id="remove-selected-btn" class="text-sm text-red-500 hover:text-red-700 font-medium disabled:opacity-50" disabled>
+              Remove Selected
+            </button>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button id="add-all-to-cart-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-green-600 transition-colors">
+              Add All to Cart
+            </button>
+            <button class="bg-white text-primary border border-primary px-4 py-2 rounded-button font-medium hover:bg-green-50 transition-colors">
+              Share Wishlist
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wishlist Items -->
+      <div id="wishlist-container">
+        <!-- Wishlist Item 1 -->
+        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="1">
+          <div class="flex items-start space-x-4">
+            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+            <img 
+              src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Organic Greek Yogurt" 
+              class="w-20 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-medium">Organic Greek Yogurt</h3>
+                  <p class="text-gray-500 text-sm">Dairy | Wholesome Farms</p>
+                  <p class="text-red-500 text-sm mt-1">Expires in 2 days</p>
+                </div>
+                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                  <i class="ri-close-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-3">
+                  <span class="text-gray-400 line-through text-sm">₹5.99</span>
+                  <span class="text-primary font-bold text-lg">₹3.29</span>
+                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">45% OFF</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+                  <span class="text-xs text-gray-500">Added 2 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist Item 2 -->
+        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="2">
+          <div class="flex items-start space-x-4">
+            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+            <img 
+              src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Artisan Sourdough Bread" 
+              class="w-20 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-medium">Artisan Sourdough Bread</h3>
+                  <p class="text-gray-500 text-sm">Bakery | Local Bakery</p>
+                  <p class="text-red-500 text-sm mt-1">Expires today</p>
+                </div>
+                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                  <i class="ri-close-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-3">
+                  <span class="text-gray-400 line-through text-sm">₹4.50</span>
+                  <span class="text-primary font-bold text-lg">₹3.15</span>
+                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">30% OFF</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+                  <span class="text-xs text-gray-500">Added 1 day ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist Item 3 -->
+        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="3">
+          <div class="flex items-start space-x-4">
+            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+            <img 
+              src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Ripe Avocados" 
+              class="w-20 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-medium">Ripe Avocados (4 pack)</h3>
+                  <p class="text-gray-500 text-sm">Food | Fresh Market</p>
+                  <p class="text-red-500 text-sm mt-1">Expires in 1 day</p>
+                </div>
+                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                  <i class="ri-close-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-3">
+                  <span class="text-gray-400 line-through text-sm">₹6.99</span>
+                  <span class="text-primary font-bold text-lg">₹3.49</span>
+                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">50% OFF</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+                  <span class="text-xs text-gray-500">Added 3 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist Item 4 -->
+        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="4">
+          <div class="flex items-start space-x-4">
+            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+            <img 
+              src="https://images.unsplash.com/photo-1546554137-f86b9593a222?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Organic Whole Milk" 
+              class="w-20 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-medium">Organic Whole Milk</h3>
+                  <p class="text-gray-500 text-sm">Dairy | Dairy Delights</p>
+                  <p class="text-red-500 text-sm mt-1">Expires in 3 days</p>
+                </div>
+                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                  <i class="ri-close-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-3">
+                  <span class="text-gray-400 line-through text-sm">₹4.29</span>
+                  <span class="text-primary font-bold text-lg">₹3.21</span>
+                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">25% OFF</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+                  <span class="text-xs text-gray-500">Added 1 week ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist Item 5 -->
+        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="5">
+          <div class="flex items-start space-x-4">
+            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+            <img 
+              src="https://images.unsplash.com/photo-1603046891744-1f76eb10aec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Mixed Berries Pack" 
+              class="w-20 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-medium">Mixed Berries Pack</h3>
+                  <p class="text-gray-500 text-sm">Food | Berry Farm</p>
+                  <p class="text-red-500 text-sm mt-1">Expires today</p>
+                </div>
+                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                  <i class="ri-close-line text-xl"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-3">
+                  <span class="text-gray-400 line-through text-sm">₹7.99</span>
+                  <span class="text-primary font-bold text-lg">₹3.19</span>
+                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">60% OFF</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+                  <span class="text-xs text-gray-500">Added 5 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State (hidden by default) -->
+      <div id="empty-state" class="empty-state text-center py-16 hidden">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+          <i class="ri-heart-line text-4xl text-gray-400"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">Your wishlist is empty</h2>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+          Start adding products to your wishlist to keep track of items you want to buy later.
+        </p>
+        <a href="/browse" class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-green-600 transition-colors inline-block">
+          Browse Products
+        </a>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold mb-6">You might also like</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <!-- Recommendation Item 1 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img 
+              src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Fresh Pasta Pack" 
+              class="w-full h-32 object-cover rounded mb-3"
+            />
+            <h3 class="font-medium mb-1">Fresh Pasta Pack</h3>
+            <p class="text-gray-500 text-sm mb-2">Food | Italian Delights</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400 line-through text-sm">₹5.49</span>
+                <span class="text-primary font-bold">₹3.57</span>
+              </div>
+              <button class="text-gray-400 hover:text-red-500">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Recommendation Item 2 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img 
+              src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Organic Bananas" 
+              class="w-full h-32 object-cover rounded mb-3"
+            />
+            <h3 class="font-medium mb-1">Organic Bananas</h3>
+            <p class="text-gray-500 text-sm mb-2">Food | Fresh Market</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400 line-through text-sm">₹2.99</span>
+                <span class="text-primary font-bold">₹1.99</span>
+              </div>
+              <button class="text-gray-400 hover:text-red-500">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Recommendation Item 3 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img 
+              src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Fresh Vegetables" 
+              class="w-full h-32 object-cover rounded mb-3"
+            />
+            <h3 class="font-medium mb-1">Fresh Vegetables Mix</h3>
+            <p class="text-gray-500 text-sm mb-2">Food | Green Garden</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400 line-through text-sm">₹8.99</span>
+                <span class="text-primary font-bold">₹5.99</span>
+              </div>
+              <button class="text-gray-400 hover:text-red-500">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Recommendation Item 4 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img 
+              src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+              alt="Cheese Selection" 
+              class="w-full h-32 object-cover rounded mb-3"
+            />
+            <h3 class="font-medium mb-1">Cheese Selection</h3>
+            <p class="text-gray-500 text-sm mb-2">Dairy | Artisan Cheese Co.</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400 line-through text-sm">₹12.99</span>
+                <span class="text-primary font-bold">₹8.99</span>
+              </div>
+              <button class="text-gray-400 hover:text-red-500">
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer (same as home page) -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6 mt-16">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-['Pacifico'] mb-4">ExpiryBuddy</h3>
+            <p class="text-gray-400 mb-4">
+              Helping you save money while reducing food waste in your community.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-facebook-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-twitter-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-instagram-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-linkedin-fill"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Browse Products</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Upload Products</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Donations</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Our Impact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">For Users</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white">How It Works</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Create Account</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">For Retailers</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">For Shelters</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+            <ul class="space-y-2">
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400">
+                  <i class="ri-mail-line"></i>
+                </div>
+                <a href="mailto:info@expirybuddy.com" class="text-gray-400 hover:text-white">info@expirybuddy.com</a>
+              </li>
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400">
+                  <i class="ri-phone-line"></i>
+                </div>
+                <a href="tel:+1234567890" class="text-gray-400 hover:text-white">+1 (234) 567-890</a>
+              </li>
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400">
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <span class="text-gray-400">123 Green Street, Anytown, USA</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-400 text-sm mb-4 md:mb-0">
+            &copy; 2025 ExpiryBuddy. All rights reserved.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Wishlist Functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const selectAllCheckbox = document.getElementById('select-all');
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+        const removeSelectedBtn = document.getElementById('remove-selected-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const addAllToCartBtn = document.getElementById('add-all-to-cart-btn');
+        const wishlistContainer = document.getElementById('wishlist-container');
+        const emptyState = document.getElementById('empty-state');
+        const wishlistCount = document.getElementById('wishlist-count');
+        const removeButtons = document.querySelectorAll('.remove-btn');
+
+        // Update wishlist count
+        function updateWishlistCount() {
+          const itemCount = document.querySelectorAll('.wishlist-item').length;
+          wishlistCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''} saved`;
+          
+          if (itemCount === 0) {
+            wishlistContainer.style.display = 'none';
+            emptyState.classList.remove('hidden');
+          } else {
+            wishlistContainer.style.display = 'block';
+            emptyState.classList.add('hidden');
+          }
+        }
+
+        // Handle select all checkbox
+        selectAllCheckbox.addEventListener('change', function() {
+          itemCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+          });
+          updateRemoveSelectedButton();
+        });
+
+        // Handle individual checkboxes
+        itemCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+            const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+            selectAllCheckbox.checked = checkedBoxes.length === itemCheckboxes.length;
+            selectAllCheckbox.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < itemCheckboxes.length;
+            updateRemoveSelectedButton();
+          });
+        });
+
+        // Update remove selected button state
+        function updateRemoveSelectedButton() {
+          const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+          removeSelectedBtn.disabled = checkedBoxes.length === 0;
+        }
+
+        // Remove selected items
+        removeSelectedBtn.addEventListener('click', function() {
+          const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+          checkedBoxes.forEach(checkbox => {
+            const wishlistItem = checkbox.closest('.wishlist-item');
+            wishlistItem.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+              wishlistItem.remove();
+              updateWishlistCount();
+              updateRemoveSelectedButton();
+            }, 300);
+          });
+          selectAllCheckbox.checked = false;
+          selectAllCheckbox.indeterminate = false;
+        });
+
+        // Remove individual items
+        removeButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const wishlistItem = this.closest('.wishlist-item');
+            wishlistItem.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+              wishlistItem.remove();
+              updateWishlistCount();
+              updateRemoveSelectedButton();
+            }, 300);
+          });
+        });
+
+        // Clear all items
+        clearAllBtn.addEventListener('click', function() {
+          if (confirm('Are you sure you want to clear your entire wishlist?')) {
+            const wishlistItems = document.querySelectorAll('.wishlist-item');
+            wishlistItems.forEach((item, index) => {
+              setTimeout(() => {
+                item.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                  item.remove();
+                  if (index === wishlistItems.length - 1) {
+                    updateWishlistCount();
+                    updateRemoveSelectedButton();
+                  }
+                }, 300);
+              }, index * 100);
+            });
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+          }
+        });
+
+        // Add all to cart
+        addAllToCartBtn.addEventListener('click', function() {
+          const originalText = this.textContent;
+          this.textContent = 'Adding...';
+          this.disabled = true;
+          
+          setTimeout(() => {
+            this.textContent = 'Added to Cart!';
+            this.classList.remove('bg-primary', 'hover:bg-green-600');
+            this.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+              this.textContent = originalText;
+              this.disabled = false;
+              this.classList.remove('bg-green-600');
+              this.classList.add('bg-primary', 'hover:bg-green-600');
+            }, 2000);
+          }, 1000);
+        });
+
+        // Add individual items to cart
+        const addToCartButtons = document.querySelectorAll('.wishlist-item button:not(.remove-btn)');
+        addToCartButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const originalText = this.textContent;
+            this.textContent = 'Adding...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+              this.textContent = 'Added!';
+              this.classList.remove('bg-primary', 'hover:bg-green-600');
+              this.classList.add('bg-green-600');
+              
+              setTimeout(() => {
+                this.textContent = originalText;
+                this.disabled = false;
+                this.classList.remove('bg-green-600');
+                this.classList.add('bg-primary', 'hover:bg-green-600');
+              }, 2000);
+            }, 500);
+          });
+        });
+
+        // Add fade out animation
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-20px); }
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        updateWishlistCount();
+        updateRemoveSelectedButton();
+      });
+    </script>
+  </body>
+</html>
