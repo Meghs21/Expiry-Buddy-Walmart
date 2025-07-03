@@ -296,12 +296,6 @@
           >
           <nav class="hidden md:flex space-x-6">
             <a href="/browse" class="text-primary font-medium">Browse</a>
-            <a href="/wishlist" class="text-gray-600 hover:text-primary font-medium"
-              >Wishlist</a
-            >
-            <a href="#" class="text-gray-600 hover:text-primary font-medium"
-              >Donations</a
-            >
           </nav>
         </div>
 
@@ -321,11 +315,20 @@
         </div>
 
         <div class="flex items-center space-x-4">
-          <button
+          <a href="/wishlist" 
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
           >
-            <i class="ri-notification-3-line text-xl"></i>
-          </button>
+            <i class="ri-heart-line text-xl"></i>
+          </a>
+          <a href="/cart" 
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
+          >
+            <i class="ri-shopping-cart-2-line text-xl"></i>
+            <span
+              class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"
+              >3</span
+            >
+          </a>
           <button
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
           >

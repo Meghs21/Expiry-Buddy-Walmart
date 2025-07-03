@@ -93,8 +93,6 @@
           <a href="/" class="text-primary text-2xl font-['Pacifico'] mr-8">ExpiryBuddy</a>
           <nav class="hidden md:flex space-x-6">
             <a href="/browse" class="text-gray-600 hover:text-primary font-medium">Browse</a>
-            <a href="/upload" class="text-gray-600 hover:text-primary font-medium">Upload</a>
-            <a href="#" class="text-gray-600 hover:text-primary font-medium">Donations</a>
           </nav>
         </div>
 
@@ -112,12 +110,13 @@
         </div>
 
         <div class="flex items-center space-x-4">
-          <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
-            <i class="ri-notification-3-line text-xl"></i>
-          </button>
-          <button class="w-10 h-10 flex items-center justify-center text-primary rounded-full bg-green-50">
+          <a href="/wishlist" class="w-10 h-10 flex items-center justify-center text-primary rounded-full bg-green-50">
             <i class="ri-heart-line text-xl"></i>
-          </button>
+          </a>
+          <a href="/cart" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative">
+            <i class="ri-shopping-cart-2-line text-xl"></i>
+            <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">3</span>
+          </a>
           <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
             <i class="ri-user-line text-xl"></i>
           </button>
@@ -189,209 +188,64 @@
             </button>
           </div>
         </div>
-      </div>
-
-      <!-- Wishlist Items -->
-      <div id="wishlist-container">
-        <!-- Wishlist Item 1 -->
-        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="1">
-          <div class="flex items-start space-x-4">
-            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
-            <img 
-              src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
-              alt="Organic Greek Yogurt" 
-              class="w-20 h-20 object-cover rounded"
-            />
-            <div class="flex-1">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-lg font-medium">Organic Greek Yogurt</h3>
-                  <p class="text-gray-500 text-sm">Dairy | Wholesome Farms</p>
-                  <p class="text-red-500 text-sm mt-1">Expires in 2 days</p>
+        
+        <!-- Wishlist Items -->
+        <div id="wishlist-container">
+          <% if (wishlist.length > 0) { %>
+            <% wishlist.forEach(item => { 
+                const product = item.productId;
+            %>
+              <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="<%= product._id %>">
+                <div class="flex items-start space-x-4">
+                  <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
+                  <img 
+                    src="<%= product.imageUrl %>" 
+                    alt="<%= product.name %>" 
+                    class="w-20 h-20 object-cover rounded"
+                  />
+                  <div class="flex-1">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-medium"><%= product.name %></h3>
+                        <p class="text-gray-500 text-sm"><%= product.category %> | <%= product.brand %></p>
+                        <p class="text-red-500 text-sm mt-1">Expires in <%= product.expiryDays %> days</p>
+                      </div>
+                      <form method="POST" action="/wishlist/remove/<%= product._id %>">
+                        <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
+                          <i class="ri-close-line text-xl"></i>
+                        </button>
+                      </form>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                      <div class="flex items-center space-x-3">
+                        <% if (product.originalPrice && product.discountedPrice) { %>
+                          <span class="text-gray-400 line-through text-sm">₹<%= product.originalPrice %></span>
+                          <span class="text-primary font-bold text-lg">₹<%= product.discountedPrice %></span>
+                          <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">
+                            <%= Math.round(100 * (1 - product.discountedPrice / product.originalPrice)) %>% OFF
+                          </span>
+                        <% } %>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
+                          Add to Cart
+                        </button>
+                        <span class="text-xs text-gray-500">Added</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
-                  <i class="ri-close-line text-xl"></i>
-                </button>
               </div>
-              <div class="flex items-center justify-between mt-3">
-                <div class="flex items-center space-x-3">
-                  <span class="text-gray-400 line-through text-sm">₹5.99</span>
-                  <span class="text-primary font-bold text-lg">₹3.29</span>
-                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">45% OFF</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
-                    Add to Cart
-                  </button>
-                  <span class="text-xs text-gray-500">Added 2 days ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            <% }) %>
+          <% } else { %>
+            <!-- Show empty state if wishlist is empty -->
+            <script>document.getElementById('wishlist-container').style.display = 'none';</script>
+            <script>document.getElementById('empty-state').classList.remove('hidden');</script>
+          <% } %>
         </div>
 
-        <!-- Wishlist Item 2 -->
-        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="2">
-          <div class="flex items-start space-x-4">
-            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
-            <img 
-              src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
-              alt="Artisan Sourdough Bread" 
-              class="w-20 h-20 object-cover rounded"
-            />
-            <div class="flex-1">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-lg font-medium">Artisan Sourdough Bread</h3>
-                  <p class="text-gray-500 text-sm">Bakery | Local Bakery</p>
-                  <p class="text-red-500 text-sm mt-1">Expires today</p>
-                </div>
-                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
-                  <i class="ri-close-line text-xl"></i>
-                </button>
-              </div>
-              <div class="flex items-center justify-between mt-3">
-                <div class="flex items-center space-x-3">
-                  <span class="text-gray-400 line-through text-sm">₹4.50</span>
-                  <span class="text-primary font-bold text-lg">₹3.15</span>
-                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">30% OFF</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
-                    Add to Cart
-                  </button>
-                  <span class="text-xs text-gray-500">Added 1 day ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wishlist Item 3 -->
-        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="3">
-          <div class="flex items-start space-x-4">
-            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
-            <img 
-              src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
-              alt="Ripe Avocados" 
-              class="w-20 h-20 object-cover rounded"
-            />
-            <div class="flex-1">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-lg font-medium">Ripe Avocados (4 pack)</h3>
-                  <p class="text-gray-500 text-sm">Food | Fresh Market</p>
-                  <p class="text-red-500 text-sm mt-1">Expires in 1 day</p>
-                </div>
-                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
-                  <i class="ri-close-line text-xl"></i>
-                </button>
-              </div>
-              <div class="flex items-center justify-between mt-3">
-                <div class="flex items-center space-x-3">
-                  <span class="text-gray-400 line-through text-sm">₹6.99</span>
-                  <span class="text-primary font-bold text-lg">₹3.49</span>
-                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">50% OFF</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
-                    Add to Cart
-                  </button>
-                  <span class="text-xs text-gray-500">Added 3 days ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wishlist Item 4 -->
-        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="4">
-          <div class="flex items-start space-x-4">
-            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
-            <img 
-              src="https://images.unsplash.com/photo-1546554137-f86b9593a222?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
-              alt="Organic Whole Milk" 
-              class="w-20 h-20 object-cover rounded"
-            />
-            <div class="flex-1">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-lg font-medium">Organic Whole Milk</h3>
-                  <p class="text-gray-500 text-sm">Dairy | Dairy Delights</p>
-                  <p class="text-red-500 text-sm mt-1">Expires in 3 days</p>
-                </div>
-                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
-                  <i class="ri-close-line text-xl"></i>
-                </button>
-              </div>
-              <div class="flex items-center justify-between mt-3">
-                <div class="flex items-center space-x-3">
-                  <span class="text-gray-400 line-through text-sm">₹4.29</span>
-                  <span class="text-primary font-bold text-lg">₹3.21</span>
-                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">25% OFF</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
-                    Add to Cart
-                  </button>
-                  <span class="text-xs text-gray-500">Added 1 week ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wishlist Item 5 -->
-        <div class="wishlist-item bg-white rounded-lg shadow-md p-4 mb-4" data-product-id="5">
-          <div class="flex items-start space-x-4">
-            <input type="checkbox" class="item-checkbox mt-2 rounded border-gray-300 text-primary focus:ring-primary">
-            <img 
-              src="https://images.unsplash.com/photo-1603046891744-1f76eb10aec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
-              alt="Mixed Berries Pack" 
-              class="w-20 h-20 object-cover rounded"
-            />
-            <div class="flex-1">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-lg font-medium">Mixed Berries Pack</h3>
-                  <p class="text-gray-500 text-sm">Food | Berry Farm</p>
-                  <p class="text-red-500 text-sm mt-1">Expires today</p>
-                </div>
-                <button class="remove-btn text-gray-400 hover:text-red-500 p-1">
-                  <i class="ri-close-line text-xl"></i>
-                </button>
-              </div>
-              <div class="flex items-center justify-between mt-3">
-                <div class="flex items-center space-x-3">
-                  <span class="text-gray-400 line-through text-sm">₹7.99</span>
-                  <span class="text-primary font-bold text-lg">₹3.19</span>
-                  <span class="bg-green-100 text-primary text-xs px-2 py-1 rounded-full font-medium">60% OFF</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <button class="bg-primary text-white px-4 py-2 rounded-button text-sm font-medium hover:bg-green-600 transition-colors">
-                    Add to Cart
-                  </button>
-                  <span class="text-xs text-gray-500">Added 5 days ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Empty State (hidden by default) -->
-      <div id="empty-state" class="empty-state text-center py-16 hidden">
-        <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-          <i class="ri-heart-line text-4xl text-gray-400"></i>
-        </div>
-        <h2 class="text-2xl font-bold mb-4 text-gray-800">Your wishlist is empty</h2>
-        <p class="text-gray-600 mb-8 max-w-md mx-auto">
-          Start adding products to your wishlist to keep track of items you want to buy later.
-        </p>
-        <a href="/browse" class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-green-600 transition-colors inline-block">
-          Browse Products
-        </a>
-      </div>
+        
+      
 
       <!-- Recommendations -->
       <div class="mt-12">

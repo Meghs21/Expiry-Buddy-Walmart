@@ -470,5 +470,53 @@
         });
 
     </script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const panel = params.get('panel');
+    const error = params.get('error');
+    const registered = params.get('registered');
+
+    const container = document.getElementById('container');
+
+    // Switch to retailer panel if needed
+    if (panel === 'retailer') {
+      container.classList.add('right-panel-active');
+    }
+
+    const messageBox = document.createElement('div');
+    messageBox.style.marginTop = '10px';
+    messageBox.style.fontSize = '14px';
+    messageBox.style.fontWeight = 'bold';
+
+    if (error === 'exists') {
+      messageBox.textContent = "⚠️ Email already registered. Try logging in.";
+      messageBox.style.color = 'orange';
+    } else if (error === 'server') {
+      messageBox.textContent = "⚠️ Something went wrong. Please try again later.";
+      messageBox.style.color = 'red';
+    } else if (error === 'notregistered') {
+      messageBox.textContent = "❌ You are not registered. Please sign up first.";
+      messageBox.style.color = 'crimson';
+    } else if (error === 'invalid') {
+      messageBox.textContent = "❌ Incorrect password. Please try again.";
+      messageBox.style.color = 'red';
+    } else if (registered === 'true') {
+      messageBox.textContent = "✅ Account created! Welcome aboard.";
+      messageBox.style.color = 'green';
+    }
+
+    if (messageBox.textContent) {
+      const formLocation =
+        error === 'exists' || registered === 'true' || error === 'server'
+          ? document.getElementById('retailerSignUpForm')
+          : document.getElementById('retailerLoginForm');
+
+      if (formLocation) formLocation.appendChild(messageBox);
+    }
+  });
+</script>
+
+
 </body>
 </html>

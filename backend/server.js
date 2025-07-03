@@ -9,6 +9,8 @@ const customerAuthRoutes = require("./routes/authRoutes");
 const retailerRoutes = require("./routes/retailerRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const Cart = require("./models/Cart");
+const Wishlist = require("./models/Wishlist");
 
 dotenv.config();
 const app = express();
@@ -53,7 +55,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/history", productHistoryRoutes);
 app.use("/api", retailerRoutes);
 app.use("/wishlist", wishlistRoutes);
-//app.use("/cart", cartRoutes);
+app.use("/cart", cartRoutes);
 
 
 // ORIGINALL HOMEEEE
@@ -74,6 +76,20 @@ res.render("retailer");
 
 app.get("/wishlist", (req, res) => {
   res.render("wishlist");
+});
+
+app.get("/cart", async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect("/signup");
+    }
+    
+    const cartItems = await Cart.find({ userId: req.session.userId }).populate("productId");
+    res.render("cart", { cartItems });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to load cart");
+  }
 });
 
 app.get("/signup", (req, res) => {
@@ -141,8 +157,21 @@ app.post("/upload", async (req, res) => {
 
 app.get("/browse", async (req, res) => {
   try {
-    const products = await Product.find(); // if browse.ejs expects this
-    res.render("browse", { products });
+    const products = await Product.find();
+
+    let wishlist = [];
+    if (req.session.userId) {
+      wishlist = await Wishlist.find({ userId: req.session.userId }).select("productId");
+    }
+
+    const wishlistIds = wishlist.map(w => w.productId.toString());
+
+    const productsWithFlags = products.map(product => ({
+      ...product.toObject(),
+      isWishlisted: wishlistIds.includes(product._id.toString()),
+    }));
+
+    res.render("browse", { products: productsWithFlags });
   } catch (err) {
     console.error(err);
     res.status(500).send("Failed to load browse page");

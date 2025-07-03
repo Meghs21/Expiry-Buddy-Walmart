@@ -29,6 +29,26 @@ router.post("/add/:productId", async (req, res) => {
   res.redirect("/cart");
 });
 
+// Update cart item quantity
+router.post("/update/:productId", async (req, res) => {
+  if (!req.session.userId) return res.status(403).send("Login required");
+
+  const { productId } = req.params;
+  const { quantity } = req.body;
+
+  if (quantity < 1) {
+    await Cart.deleteOne({ userId: req.session.userId, productId });
+  } else {
+    await Cart.findOneAndUpdate(
+      { userId: req.session.userId, productId },
+      { quantity },
+      { new: true }
+    );
+  }
+
+  res.redirect("/cart");
+});
+
 // Remove from cart
 router.post("/remove/:productId", async (req, res) => {
   if (!req.session.userId) return res.status(403).send("Login required");
