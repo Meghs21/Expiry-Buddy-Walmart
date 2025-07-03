@@ -32,7 +32,7 @@ const dotenv = require("dotenv");
 const path = require("path"); // 👉 to handle path to views
 const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
-
+const productHistoryRoutes = require("./routes/productHistoryRoutes");
 dotenv.config();
 const app = express();
 
@@ -69,7 +69,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // API Routes
 app.use("/api/products", productRoutes);
-
+app.use("/api/history", productHistoryRoutes);
 // 👇 Render the EJS page on root URL
 // app.get("/", (req, res) => {
 //   res.render("home"); // renders home.ejs from frontend/views/

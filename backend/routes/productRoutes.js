@@ -8,12 +8,48 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 
-// All API routes
-router.get("/", getProducts);               // GET all products
-router.get("/:id", getProductById);         // GET product by ID
-router.post("/", createProduct);            // CREATE new product
-router.put("/:id", updateProduct);          // UPDATE product by ID
-router.delete("/:id", deleteProduct);       // DELETE product by ID
+const Product = require("../models/Product");
+const moveProductToHistory = require("../utils/moveToHistory");
 
+// Define routes
+router.get("/", getProducts);
+router.get("/:id", getProductById);
+router.post("/", createProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
+
+// ➕ Your new ones
+router.post("/sell/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).send("❌ Product not found");
+
+    await moveProductToHistory(product, true);
+    await product.remove();
+
+    res.send("✅ Product sold and moved to history");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Failed to move product to history");
+  }
+});
+
+router.post("/archiveExpired", async (req, res) => {
+  try {
+    const now = new Date();
+    const expiredProducts = await Product.find({ expiryDate: { $lt: now } });
+
+    for (const product of expiredProducts) {
+      await moveProductToHistory(product, false);
+      await product.remove();
+    }
+
+    res.send(`✅ Archived ${expiredProducts.length} expired products`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Failed to archive expired products");
+  }
+});
+
+// ✅ Export everything at the end
 module.exports = router;
-
