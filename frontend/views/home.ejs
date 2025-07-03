@@ -283,6 +283,21 @@
       #scroll-left:hover, #scroll-right:hover {
           transform: scale(1.1);
       }
+      
+      /* User dropdown styles */
+      .user-dropdown {
+          transition: all 0.3s ease;
+          transform-origin: top right;
+          transform: scale(0.95);
+          opacity: 0;
+          visibility: hidden;
+      }
+      
+      .group:hover .user-dropdown {
+          transform: scale(1);
+          opacity: 1;
+          visibility: visible;
+      }
     </style>
   </head>
   <body>
@@ -316,24 +331,42 @@
 
         <div class="flex items-center space-x-4">
           <a href="/wishlist" 
-            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
           >
             <i class="ri-heart-line text-xl"></i>
+            <% if (locals.wishlistCount && wishlistCount > 0) { %>
+              <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><%= wishlistCount %></span>
+            <% } %>
           </a>
           <a href="/cart" 
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
           >
             <i class="ri-shopping-cart-2-line text-xl"></i>
-            <span
-              class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"
-              >3</span
-            >
+            <% if (locals.cartCount && cartCount > 0) { %>
+              <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><%= cartCount %></span>
+            <% } %>
           </a>
-          <button
-            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
-          >
-            <i class="ri-user-line text-xl"></i>
-          </button>
+          <% if (locals.isLoggedIn && locals.user) { %>
+            <div class="relative group">
+              <button
+                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+              >
+                <i class="ri-user-line text-xl"></i>
+              </button>
+              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 user-dropdown">
+                <div class="px-4 py-2 border-b border-gray-100">
+                  <p class="font-medium text-gray-800"><%= user.fullName %></p>
+                </div>
+                <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+              </div>
+            </div>
+          <% } else { %>
+            <a href="/signup" 
+              class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+            >
+              <i class="ri-user-line text-xl"></i>
+            </a>
+          <% } %>
           <button
             class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
           >
