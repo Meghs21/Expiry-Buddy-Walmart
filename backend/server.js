@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const path = require("path"); // 👉 to handle path to views
 const cron = require("node-cron");
 
-//Routes % models
+//Routes & models
 const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
 const productHistoryRoutes = require("./routes/productHistoryRoutes");
@@ -321,7 +321,38 @@ app.post("/checkout", async (req, res) => {
 app.get("/checkout", (req, res) => {
   res.redirect("/cart"); // or res.render("checkoutConfirm");
 });
+// ⏰ Cron Job – Runs every day at midnight
+cron.schedule("0 0 * * *", async () => {
+console.log("🕒 Running daily expiry check...");
 
+try {
+const expiredProducts = await Product.find({
+expiryDate: { $lt: new Date() },
+});
+
+for (const product of expiredProducts) {
+  // Archive to ProductHistory
+  await moveProductToHistory(product, false);
+
+  // Log in Donations
+  const donation = new Donation({
+    productId: product._id,
+    productName: product.name,
+    quantity: product.quantity,
+    expiryDate: product.expiryDate,
+    originalLocation: product.location,
+  });
+  await donation.save();
+
+  // Delete from Products collection
+  await Product.findByIdAndDelete(product._id);
+}
+
+console.log(`✅ Archived and donated ${expiredProducts.length} expired products.`);
+} catch (err) {
+console.error("❌ Error in daily cron job:", err);
+}
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;

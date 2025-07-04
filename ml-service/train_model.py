@@ -11,7 +11,7 @@ from datetime import datetime
 
 def preprocess(df):
 
-    df["is_perishable"] = df["is_perishable"].astype(int)
+    df["is_perishable"] = df["is_perishable"].fillna(True).astype(int)
 
     # Convert date columns to datetime if not already
     df["createdAt"] = pd.to_datetime(df["createdAt"])
@@ -37,6 +37,7 @@ def preprocess(df):
     # Prepare X and y
     X = df.drop("discount", axis=1)
     y = df["discount"]
+    print("Training column order:", X.columns.tolist())
 
     return X, y, encoders
 

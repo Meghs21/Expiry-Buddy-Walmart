@@ -59,7 +59,10 @@ for prod in live_products:
         "wishlistCount": wishlist_count,  
         "is_perishable": is_perishable,  
         "days_until_expiry": days_until_expiry,  
-    }  
+        "soldInDays": 0,     # default for unsold live product
+        "wasSold": 0         # default for unsold live product
+    }
+
     data.append(row)  
 
 df = pd.DataFrame(data)
@@ -72,18 +75,18 @@ for col in ["category", "sellerName", "location"]:
 
 
 # Remove unnecessary columns
-X = df[["category", "sellerName", "location", "price", "quantity", "wishlistCount", "is_perishable", "days_until_expiry"]]
+X = df[['category', 'price', 'quantity', 'wishlistCount', 'sellerName', 'location', 'is_perishable', 'soldInDays', 'wasSold', 'days_until_expiry']]
 
 # Predict discounts
 predicted_discounts = model.predict(X)
 
 # Update MongoDB with new discount and finalPrice
-for i, prod in enumerate(products):
-    discount = round(predicted_discounts[i], 2)
-    price = prod["price"]
-    final_price = round(price - (price * discount / 100), 2)
+for i, prod_id in enumerate(product_ids):
+    discount = float(predicted_discounts[i])
+    original_price = live_products[i].get("price", 0)
+    final_price = round(original_price - (original_price * discount / 100), 2)
 
-    product_col.update_one(
+    products_col.update_one(
         {"_id": ObjectId(prod["_id"])},
         {
             "$set": {
