@@ -49,6 +49,21 @@
       .logo {
           font-family: 'Pacifico', serif;
       }
+      
+      /* User dropdown styles */
+      .user-dropdown {
+          transition: all 0.3s ease;
+          transform-origin: top right;
+          transform: scale(0.95);
+          opacity: 0;
+          visibility: hidden;
+      }
+      
+      .group:hover .user-dropdown {
+          transform: scale(1);
+          opacity: 1;
+          visibility: visible;
+      }
     </style>
   </head>
   <body>
@@ -56,7 +71,7 @@
     <header class="bg-white shadow-sm sticky top-0 z-50">
       <div class="container mx-auto px-4 flex items-center justify-between h-16">
         <div class="flex items-center">
-          <a href="/" class="text-primary text-2xl font-['Pacifico'] mr-8">ExpiryBuddy</a>
+          <a href="/home" class="text-primary text-2xl font-['Pacifico'] mr-8">ExpiryBuddy</a>
           <nav class="hidden md:flex space-x-6">
             <a href="/browse" class="text-gray-600 hover:text-primary font-medium">Browse</a>
           </nav>
@@ -82,9 +97,27 @@
           <a href="/cart" class="w-10 h-10 flex items-center justify-center text-primary rounded-full bg-green-50">
             <i class="ri-shopping-cart-2-line text-xl"></i>
           </a>
-          <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
-            <i class="ri-user-line text-xl"></i>
-          </button>
+          <% if (locals.isLoggedIn && locals.user) { %>
+            <div class="relative group">
+              <button
+                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+              >
+                <i class="ri-user-line text-xl"></i>
+              </button>
+              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 user-dropdown">
+                <div class="px-4 py-2 border-b border-gray-100">
+                  <p class="font-medium text-gray-800"><%= user.fullName %></p>
+                </div>
+                <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+              </div>
+            </div>
+          <% } else { %>
+            <a href="/signup" 
+              class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
+            >
+              <i class="ri-user-line text-xl"></i>
+            </a>
+          <% } %>
           <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
             <i class="ri-menu-line text-xl"></i>
           </button>
@@ -96,7 +129,7 @@
     <div class="bg-white border-b border-gray-100">
       <div class="container mx-auto px-4 py-3">
         <nav class="flex items-center space-x-2 text-sm">
-          <a href="/" class="text-gray-500 hover:text-primary">Home</a>
+          <a href="/home" class="text-gray-500 hover:text-primary">Home</a>
           <i class="ri-arrow-right-s-line text-gray-400"></i>
           <span class="text-primary font-medium">Your Cart</span>
         </nav>
@@ -247,14 +280,28 @@
                   </div>
                 </div>
               </div>
-              
-              <button class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-green-600 transition-colors">
-                Proceed to Checkout
-              </button>
+            
+              <!-- <form action="/checkout" method="POST">
+                 <button class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-green-600 transition-colors">
+                  Proceed to Checkout
+                 </button>
+              </form>  -->
+
+          
             </div>
           </div>
         </div>
       <% } %>
+
+        <form id="checkoutForm" action="/checkout" method="POST">
+           <button 
+              class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-green-600 transition-colors"
+                 <% if (!cartItems || cartItems.length === 0) { %> disabled class="opacity-50 cursor-not-allowed" <% } %>>
+                  Proceed to Checkout
+               </button>
+        </form>
+
+
     </div>
 
     <script>
@@ -312,5 +359,26 @@
         }
       });
     </script>
+
+    <script>
+  const form = document.getElementById("checkoutForm");
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault(); // Prevent default redirect
+
+    const response = await fetch("/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    });
+
+    const text = await response.text();
+    if (response.ok) {
+      alert("✅ Checkout Successful!");
+      window.location.href = "/browse"; // Or just reload or redirect to thank you
+    } else {
+      alert("❌ Checkout Failed. Please try again.");
+    }
+  });
+</script>
+
   </body>
 </html>

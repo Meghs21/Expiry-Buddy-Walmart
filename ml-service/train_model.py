@@ -1,65 +1,64 @@
 import pandas as pd
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error
 import joblib
 
-# Load env
-load_dotenv()
-MONGO_URI = os.getenv("MONGO_URI")
+from utils.data_loader import load_data
 
-# Connect to DB
-client = MongoClient(MONGO_URI)
-db = client["expirybuddy"]
-collection = db["producthistories"]
+from datetime import datetime
 
-# Fetch data
-data = pd.DataFrame(list(collection.find()))
-print("✅ Records fetched:", len(data))
+def preprocess(df):
 
-# Drop _id
-data.drop(columns=["_id"], inplace=True, errors="ignore")
+    df["is_perishable"] = df["is_perishable"].astype(int)
 
-# Clean dates
-data["expiryDate"] = pd.to_datetime(data["expiryDate"], errors="coerce")
-data["dateSold"] = pd.to_datetime(data["dateSold"], errors="coerce")
-data.dropna(subset=["expiryDate", "dateSold"], inplace=True)
-data["daysTillExpiry"] = (data["expiryDate"] - data["dateSold"]).dt.days
-data.drop(columns=["expiryDate", "dateSold"], inplace=True)
+    # Convert date columns to datetime if not already
+    df["createdAt"] = pd.to_datetime(df["createdAt"])
+    df["expiryDate"] = pd.to_datetime(df["expiryDate"])
 
-# # Fill missing numerical columns
-# for col in ["views", "clicks", "wishlistCount", "quantity"]:
-#     data[col] = data.get(col, 0).fillna(0)
+    # Create new feature: days until expiry from creation
+    df["days_until_expiry"] = (df["expiryDate"] - df["createdAt"]).dt.days
 
-# Encode categorical
-for col in ["category", "sellerName", "sellerType"]:
-    if col in data.columns:
-        data[col] = LabelEncoder().fit_transform(data[col].astype(str))
+    # Drop unused or problematic columns
+    df = df.drop(columns=[
+        "_id", "productId", "name", "dateSold", "createdAt",
+        "expiryDate", "finalPrice", "views", "clicks", "__v"
+    ])
 
-# Ensure target exists
-if "discount" not in data.columns:
-    raise ValueError("❌ 'discount' column missing!")
+    # Encode categorical columns
+    encoders = {}
+    for col in ["category", "sellerName", "location"]:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+        encoders[col] = le
 
-# Feature/label split
-X = data.drop(columns=["discount"])
-y = data["discount"]
 
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Prepare X and y
+    X = df.drop("discount", axis=1)
+    y = df["discount"]
 
-# Train model
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+    return X, y, encoders
 
-# Evaluate
-y_pred = model.predict(X_test)
-print("📊 MAE:", mean_absolute_error(y_test, y_pred))
-print("📊 R²:", r2_score(y_test, y_pred))
 
-# Save model
-joblib.dump(model, "discount_model.pkl")
-print("✅ Model saved as discount_model.pkl")
+
+def main():
+    df = load_data()
+    X, y, encoders = preprocess(df)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+
+    preds = model.predict(X_test)
+    mse = mean_squared_error(y_test, preds)
+    print(f"✅ Trained. MSE: {mse:.2f}")
+
+    joblib.dump(model, "model.pkl")
+    print("📦 Model saved to model.pkl")
+
+    joblib.dump(encoders, "encoders.pkl")
+
+
+if __name__ == "__main__":
+    main()

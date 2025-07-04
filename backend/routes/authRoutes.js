@@ -41,12 +41,12 @@ router.post("/customers/login", async (req, res) => {
 
     const customer = await Customer.findOne({ email });
     if (!customer) {
-      return res.redirect("/?error=notfound");
+      return res.redirect("/signup?error=notregistered");
     }
 
     const isMatch = await bcrypt.compare(password, customer.password);
     if (!isMatch) {
-      return res.redirect("/?error=invalid");
+      return res.redirect("/signup?error=invalid");
     }
 
     // Set session
@@ -56,7 +56,7 @@ router.post("/customers/login", async (req, res) => {
     return res.redirect("/home");
   } catch (err) {
     console.error("Customer login error:", err);
-    return res.redirect("/?error=server");
+    return res.redirect("/signup?error=server");
   }
 });
 

@@ -507,10 +507,19 @@
     }
 
     if (messageBox.textContent) {
-      const formLocation =
-        error === 'exists' || registered === 'true' || error === 'server'
+      let formLocation;
+      
+      if (panel === 'retailer') {
+        // For retailer panel
+        formLocation = error === 'exists' || registered === 'true' || error === 'server'
           ? document.getElementById('retailerSignUpForm')
           : document.getElementById('retailerLoginForm');
+      } else {
+        // For customer panel (default)
+        formLocation = error === 'exists' || registered === 'true' || error === 'server'
+          ? document.getElementById('customerSignUpForm')
+          : document.getElementById('customerLoginForm');
+      }
 
       if (formLocation) formLocation.appendChild(messageBox);
     }

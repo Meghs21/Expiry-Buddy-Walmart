@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path"); // 👉 to handle path to views
+const cron = require("node-cron");
+
+//Routes % models
 const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
 const productHistoryRoutes = require("./routes/productHistoryRoutes");
@@ -12,11 +15,18 @@ const cartRoutes = require("./routes/cartRoutes");
 const Cart = require("./models/Cart");
 const Wishlist = require("./models/Wishlist");
 const Customer = require("./models/Customer");
+const ProductHistory = require("./models/ProductHistory");
+const moveProductToHistory = require("./utils/moveToHistory");
+const Donation = require('./models/Donation');
+const donationRoutes = require("./routes/donationRoutes");
+
+
 
 
 dotenv.config();
 const app = express();
 
+//session setup
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
@@ -58,6 +68,7 @@ app.use("/api/history", productHistoryRoutes);
 app.use("/api", retailerRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/cart", cartRoutes);
+app.use("/api", donationRoutes);
 
 
 // ORIGINALL HOMEEEE
@@ -104,8 +115,28 @@ app.get("/retailer", (req, res) => {
 res.render("retailer");
 });
 
-app.get("/wishlist", (req, res) => {
-  res.render("wishlist");
+app.get("/wishlist", async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect("/signup");
+    }
+    
+    const wishlist = await Wishlist.find({ userId: req.session.userId }).populate("productId");
+    res.render("wishlist", { wishlist });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to load wishlist");
+  }
+});
+
+app.get('/donations', async (req, res) => {
+  try {
+    const donations = await Donation.find(); // Fetch all donations
+    res.render('donations', { donations });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching donations');
+  }
 });
 
 app.get("/cart", async (req, res) => {
@@ -252,6 +283,44 @@ app.get("/home", async (req, res) => {
 //     res.send("❌ Signup failed");
 //   }
 // });
+
+// moving soldout stuff 
+
+app.post("/checkout", async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect("/signup");
+    }
+
+    if (!req.session.userId) {
+    console.log("❌ Not logged in");
+    return res.redirect("/signup");
+    }
+    const cartItems = await Cart.find({ userId: req.session.userId }).populate("productId");
+
+    for (const item of cartItems) {
+      const product = item.productId;
+
+      if (!product) continue;
+
+      // Move product to history and mark as sold
+      await moveProductToHistory(product, true);
+      await Product.findByIdAndDelete(product._id); // or use isSold if you prefer
+
+      // Remove from cart
+      await Cart.findByIdAndDelete(item._id);
+    }
+
+    res.send("<h2>✅ Checkout complete! Products sold and cart cleared.</h2><a href='/browse'>Browse more</a>");
+  } catch (error) {
+    console.error("❌ Checkout Error:", error);
+    res.status(500).send("❌ Something went wrong during checkout.");
+  }
+});
+
+app.get("/checkout", (req, res) => {
+  res.redirect("/cart"); // or res.render("checkoutConfirm");
+});
 
 
 // Start the server
