@@ -10,7 +10,7 @@ router.post("/customers/signup", async (req, res) => {
 
     const existing = await Customer.findOne({ email });
     if (existing) {
-      return res.redirect("/?exists=true"); // Already registered
+      return res.redirect("/signup?error=exists"); // Already registered
     }
 
     // ✅ No need to hash manually if model has pre-save hook
@@ -30,7 +30,7 @@ router.post("/customers/signup", async (req, res) => {
     return res.redirect("/home?registered=true");
   } catch (err) {
     console.error("Customer signup error:", err);
-    return res.redirect("/?error=server");
+    return res.redirect("/signup?error=server");
   }
 });
 

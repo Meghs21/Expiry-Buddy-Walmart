@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   phone: { type: String },
   password: { type: String, required: true },
+  googleId: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

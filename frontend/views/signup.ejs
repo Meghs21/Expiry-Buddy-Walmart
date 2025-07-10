@@ -279,6 +279,22 @@
             border-color: #2d6a4f;
             background-color: rgba(82, 183, 136, 0.1);
         }
+        
+        .google-btn {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .google-btn i {
+            color: #4285F4;
+            font-size: 18px;
+        }
+        
+        .google-btn:hover {
+            background-color: #f1f1f1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
         .signup-link, .login-link {
             margin-top: 15px;
@@ -302,9 +318,7 @@
             <form action="/auth/customers/login" method="POST" id="customerLoginForm" class="active-form">
                 <h1>Customer Login</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="/auth/google/login" class="social google-btn"><i class="fab fa-google"></i></a>
                 </div>
                 <span>or use your account</span>
               <input type="email" name="email" placeholder="Email" required />
@@ -314,14 +328,11 @@
                 <p class="signup-link">Don't have an account? <a href="#" id="customerSignUpLink">Sign up</a></p>
             </form>
 
-            <!-- customer signup -->
-            <!-- <form action="/auth/customer-signup" id="customerSignUpForm" class="hidden-form"> -->
-                <form action="/auth/customers/signup" method="POST" id="customerSignUpForm" class="hidden-form">
+            <!-- Customer Signup Form -->
+            <form action="/auth/customers/signup" method="POST" id="customerSignUpForm" class="hidden-form">
                 <h1>Create Customer Account</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="/auth/google/signup" class="social google-btn"><i class="fab fa-google"></i></a>
                 </div>
                 <span>or use your email for registration</span>
                 <input type="text" name="fullName" placeholder="Full Name" required />
@@ -332,24 +343,7 @@
                 <button>Sign Up</button>
                 <p class="login-link">Already have an account? <a href="#" id="customerLoginLink">Login</a></p>
             </form>
-        </div> 
-
-              <!-- Customer Sign Up Form
-<form action="/auth/customer-signup" method="POST" id="customerSignUpForm" class="hidden-form">
-  <h1>Create Customer Account</h1>
-  <div class="social-container">
-    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-  </div>
-  <span>or use your email for registration</span>
-  <input type="text" name="username" placeholder="Full Name" required />
-  <input type="email" name="email" placeholder="Email" required />
-  <input type="tel" name="phone" placeholder="Phone Number" />
-  <input type="password" name="password" placeholder="Password" required />
-  <button type="submit">Sign Up</button>
-  <p class="login-link">Already have an account? <a href="#" id="customerLoginLink">Login</a></p>
-</form> -->
+        </div>
 
 
 
@@ -358,12 +352,7 @@
             <!-- Retailer Login Form -->
             <form action="/api/retailers/login" method="POST" id="retailerLoginForm" class="active-form">
                 <h1>Retailer Login</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your business account</span>
+                <span>Use your business account</span>
                 <input type="email" name="email" placeholder="Business Email" required />
                 <input type="password" name="password" placeholder="Password" required />
                 <a href="#">Forgot your password?</a>
@@ -374,12 +363,7 @@
             <!-- Retailer Sign Up Form -->
             <form action="/api/retailers/signup" method="POST" id="retailerSignUpForm" class="hidden-form">
                 <h1>Create Retailer Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or register your business</span>
+                <span>Register your business</span>
                 <input type="text" name="businessName" placeholder="Business Name" />
                 <input type="text" name="licenseNumber" placeholder="License Number" />
                 <input type="email" name="email" placeholder="Business Email" />

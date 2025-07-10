@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path"); // 👉 to handle path to views
 const cron = require("node-cron");
+const passport = require("passport");
 
 //Routes & models
 const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
 const productHistoryRoutes = require("./routes/productHistoryRoutes");
 const customerAuthRoutes = require("./routes/authRoutes");
+const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const retailerRoutes = require("./routes/retailerRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const cartRoutes = require("./routes/cartRoutes");
@@ -41,6 +43,10 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 } // 1 hour
 }));
 
+// Initialize passport
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
 
 // 📌 Setup EJS view engine
 app.set("view engine", "ejs");
@@ -55,6 +61,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //middleware for auth
 app.use("/auth", customerAuthRoutes);
+app.use("/auth", googleAuthRoutes);
 
 
 // MongoDB connection
@@ -238,9 +245,7 @@ app.get("/browse", async (req, res) => {
     res.status(500).send("Failed to load browse page");
   }
 });
-const User = require("./models/User"); // make sure this is imported
-
-// GET signup page
+// GET home page
 app.get("/home", async (req, res) => {
   try {
     const products = await Product.find();
@@ -260,29 +265,6 @@ app.get("/home", async (req, res) => {
     res.status(500).send("Failed to load products");
   }
 });
-
-// POST signup form
-
-// app.post("/signup", async (req, res) => {
-//   const { username, email, password } = req.body;
-
-//   try {
-//     const existing = await User.findOne({ email });
-//     if (existing) {
-//       req.session.userId = existing._id;
-//       return res.redirect("/home");
-//     }
-
-//     const user = new User({ username, email, password });
-//     await user.save();
-
-//     req.session.userId = user._id;
-//     res.redirect("/home");
-//   } catch (err) {
-//     console.error(err);
-//     res.send("❌ Signup failed");
-//   }
-// });
 
 // moving soldout stuff 
 
