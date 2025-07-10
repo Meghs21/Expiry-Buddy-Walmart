@@ -3,10 +3,12 @@ const router = express.Router();
 const {
   getProducts,
   getProductById,
-  createProduct,
+  createProductForm,  // 🆕 for HTML form
+  createProductAPI,   // 🆕 for fetch/postman
   updateProduct,
   deleteProduct,
 } = require("../controllers/productController");
+
 
 const Product = require("../models/Product");
 const moveProductToHistory = require("../utils/moveToHistory");
@@ -14,9 +16,12 @@ const moveProductToHistory = require("../utils/moveToHistory");
 // Define routes
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.post("/", createProduct);
+router.post("/", createProductForm); // 👈 for form submissions
+router.post("/api", createProductAPI); // 👈 for fetch/ajax/api usage
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
+
+
 
 // ➕ Your new ones
 router.post("/sell/:id", async (req, res) => {

@@ -169,13 +169,15 @@ app.get("/signup", (req, res) => {
 
 // Logout route
 app.get("/logout", (req, res) => {
+  const redirectUrl = req.query.redirect || "/signup"; // Get redirect URL from query parameter or default to /signup
+  
   req.session.destroy((err) => {
     if (err) {
       console.error("❌ Error during logout:", err);
       return res.status(500).send("Logout failed");
     }
     res.clearCookie("connect.sid");
-    res.redirect("/signup"); // or homepage or login page
+    res.redirect(redirectUrl);
   });
 });
 
@@ -335,6 +337,28 @@ console.log(`✅ Archived and donated ${expiredProducts.length} expired products
 console.error("❌ Error in daily cron job:", err);
 }
 });
+// 🔧 Manual test for cron job logic
+(async () => {
+  console.log("⚙️ Manually testing expiry logic now...");
+  const expiredProducts = await Product.find({ expiryDate: { $lt: new Date() } });
+
+  for (const product of expiredProducts) {
+    await moveProductToHistory(product, false);
+
+    const donation = new Donation({
+      productId: product._id,
+      productName: product.name,
+      quantity: product.quantity,
+      expiryDate: product.expiryDate,
+      originalLocation: product.location,
+    });
+    await donation.save();
+
+    await Product.findByIdAndDelete(product._id);
+  }
+
+  console.log(`✅ Manually processed ${expiredProducts.length} expired products.`);
+})();
 
 // Start the server
 const PORT = process.env.PORT || 5000;
