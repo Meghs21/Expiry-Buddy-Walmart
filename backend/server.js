@@ -10,7 +10,7 @@ const productRoutes = require("./routes/productRoutes");
 const Product = require("./models/Product");
 const productHistoryRoutes = require("./routes/productHistoryRoutes");
 const customerAuthRoutes = require("./routes/authRoutes");
-const googleAuthRoutes = require("./routes/googleAuthRoutes");
+// const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const retailerRoutes = require("./routes/retailerRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const cartRoutes = require("./routes/cartRoutes");
@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //middleware for auth
 app.use("/auth", customerAuthRoutes);
-app.use("/auth", googleAuthRoutes);
+// app.use("/auth", googleAuthRoutes);
 
 
 // MongoDB connection
