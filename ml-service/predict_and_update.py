@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 from bson import ObjectId
 from sklearn.preprocessing import LabelEncoder
+import logging
 
 # Load env
 load_dotenv("../backend/.env")
@@ -95,5 +96,5 @@ for i, prod_id in enumerate(product_ids):
             }
         }
     )
-
-print("✅ Discounts updated for all live products.")
+logging.basicConfig(filename="ml_update.log", level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.info("✅ Discounts updated for all live products.")

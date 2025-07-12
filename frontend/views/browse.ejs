@@ -259,8 +259,6 @@
               display: block;
           }
       }
-      
-      /* User dropdown styles */
       .user-dropdown {
           transition: all 0.3s ease;
           transform-origin: top right;
@@ -268,7 +266,6 @@
           opacity: 0;
           visibility: hidden;
       }
-      
       .group:hover .user-dropdown {
           transform: scale(1);
           opacity: 1;
@@ -278,45 +275,29 @@
   </head>
   <body>
     <header class="bg-white shadow-sm sticky top-0 z-50">
-      <div
-        class="container mx-auto px-4 flex items-center justify-between h-16"
-      >
+      <div class="container mx-auto px-4 flex items-center justify-between h-16">
         <div class="flex items-center">
-          <a
-            href="/home"
-            class="text-primary text-2xl font-['Pacifico'] mr-8"
-            >ExpiryBuddy</a
-          >
+          <a href="/home" class="text-primary text-2xl font-['Pacifico'] mr-8">ExpiryBuddy</a>
           <nav class="hidden md:flex space-x-6">
             <a href="/browse" class="text-primary font-medium">Browse</a>
           </nav>
         </div>
         <div class="flex-1 max-w-md mx-4 hidden md:block">
           <div class="relative">
-            <input
-              type="text"
-              placeholder="Search products, categories, or locations..."
-              class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-            />
-            <div
-              class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
-            >
+            <input type="text" placeholder="Search products, categories, or locations..." class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" />
+            <div class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400">
               <i class="ri-search-line"></i>
             </div>
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="/wishlist" 
-            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
-          >
+          <a href="/wishlist" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative">
             <i class="ri-heart-line text-xl"></i>
             <% if (locals.wishlistCount && wishlistCount > 0) { %>
               <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><%= wishlistCount %></span>
             <% } %>
           </a>
-          <a href="/cart" 
-            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative"
-          >
+          <a href="/cart" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 relative">
             <i class="ri-shopping-cart-2-line text-xl"></i>
             <% if (locals.cartCount && cartCount > 0) { %>
               <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><%= cartCount %></span>
@@ -324,9 +305,7 @@
           </a>
           <% if (locals.isLoggedIn && locals.user) { %>
             <div class="relative group">
-              <button
-                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
-              >
+              <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
                 <i class="ri-user-line text-xl"></i>
               </button>
               <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 user-dropdown">
@@ -337,30 +316,19 @@
               </div>
             </div>
           <% } else { %>
-            <a href="/signup" 
-              class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
-            >
+            <a href="/signup" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
               <i class="ri-user-line text-xl"></i>
             </a>
           <% } %>
-          <button
-            id="mobile-menu-button"
-            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
-          >
+          <button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
             <i class="ri-menu-line text-xl"></i>
           </button>
         </div>
       </div>
       <div class="md:hidden px-4 py-2 bg-white border-t border-gray-100">
         <div class="relative">
-          <input
-            type="text"
-            placeholder="Search..."
-            class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-          />
-          <div
-            class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400"
-          >
+          <input type="text" placeholder="Search..." class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" />
+          <div class="absolute left-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-400">
             <i class="ri-search-line"></i>
           </div>
         </div>
@@ -369,27 +337,18 @@
 
     <div class="container mx-auto px-4 py-6">
       <div class="flex items-center text-sm text-gray-600 mb-6">
-        <a
-          href="/home"
-          class="hover:text-primary"
-          >Home</a
-        >
+        <a href="/home" class="hover:text-primary">Home</a>
         <span class="mx-2">/</span>
         <span class="text-primary font-medium">Browse Products</span>
       </div>
 
+      <form id="filterForm" method="get" action="/browse">
       <div class="flex flex-col md:flex-row gap-6">
         <!-- Filter Sidebar -->
-        <div
-          id="filter-sidebar"
-          class="filter-sidebar bg-white rounded-lg shadow-sm p-5 md:w-72 w-full md:sticky md:top-24 h-fit"
-        >
+        <div id="filter-sidebar" class="filter-sidebar bg-white rounded-lg shadow-sm p-5 md:w-72 w-full md:sticky md:top-24 h-fit">
           <div class="flex justify-between items-center mb-6 md:hidden">
             <h3 class="font-bold text-lg">Filters</h3>
-            <button
-              id="close-filter"
-              class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100"
-            >
+            <button id="close-filter" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary rounded-full hover:bg-gray-100">
               <i class="ri-close-line text-xl"></i>
             </button>
           </div>
@@ -397,51 +356,25 @@
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Price Range</h4>
             <div class="flex items-center justify-between mb-2">
-              <span id="price-min" class="text-sm text-gray-600">$0</span>
-              <span id="price-max" class="text-sm text-gray-600">$50</span>
+              <span id="price-min" class="text-sm text-gray-600">₹<%= minPrice %></span>
+              <span id="price-max" class="text-sm text-gray-600">₹<%= maxPrice %></span>
             </div>
             <div class="range-slider mb-4">
               <div class="range-selected" id="price-range-selected"></div>
               <div class="range-input">
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
-                  value="0"
-                  class="price-min-range"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
-                  value="50"
-                  class="price-max-range"
-                />
+                <input type="range" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMin ? query.priceMin : minPrice %>" class="price-min-range" name="priceMin" />
+                <input type="range" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMax ? query.priceMax : maxPrice %>" class="price-max-range" name="priceMax" />
               </div>
             </div>
             <div class="flex items-center gap-2">
               <div class="relative flex-1">
-                <input
-                  type="number"
-                  min="0"
-                  max="50"
-                  value="0"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                  id="price-min-input"
-                />
-                <div class="absolute left-3 top-2 text-gray-500 text-sm">$</div>
+                <input type="number" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMin ? query.priceMin : minPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" id="price-min-input" name="priceMin" />
+                <div class="absolute left-3 top-2 text-gray-500 text-sm">₹</div>
               </div>
               <span class="text-gray-400">-</span>
               <div class="relative flex-1">
-                <input
-                  type="number"
-                  min="0"
-                  max="50"
-                  value="50"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                  id="price-max-input"
-                />
-                <div class="absolute left-3 top-2 text-gray-500 text-sm">$</div>
+                <input type="number" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMax ? query.priceMax : maxPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" id="price-max-input" name="priceMax" />
+                <div class="absolute left-3 top-2 text-gray-500 text-sm">₹</div>
               </div>
             </div>
           </div>
@@ -451,19 +384,11 @@
             <div class="space-y-3">
               <div>
                 <label class="block text-sm text-gray-600 mb-1">From</label>
-                <input
-                  type="date"
-                  value="2025-06-20"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                />
+                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryFrom" value="<%= typeof query !== 'undefined' && query.expiryFrom ? query.expiryFrom : '' %>" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1">To</label>
-                <input
-                  type="date"
-                  value="2025-06-27"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                />
+                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryTo" value="<%= typeof query !== 'undefined' && query.expiryTo ? query.expiryTo : '' %>" />
               </div>
             </div>
           </div>
@@ -471,268 +396,122 @@
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Categories</h4>
             <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
-              <label class="custom-checkbox">
-                <input type="checkbox" checked />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">All Categories</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Dairy</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Bakery</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Produce</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Meat</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Seafood</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Ready Meals</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Beverages</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Personal Care</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Household</span>
-              </label>
+              <% allCategories.forEach(cat => { %>
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="categories" value="<%= cat %>" <%= typeof query !== 'undefined' && query.categories && (Array.isArray(query.categories) ? query.categories.includes(cat) : query.categories === cat) ? 'checked' : '' %> />
+                  <span class="checkmark"></span>
+                  <span class="ml-2 text-sm"><%= cat %></span>
+                </label>
+              <% }); %>
             </div>
           </div>
 
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Store Location</h4>
             <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
-              <label class="custom-checkbox">
-                <input type="checkbox" checked />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">All Locations</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">Downtown</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">North End</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">West Side</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">East Village</span>
-              </label>
-              <label class="custom-checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>
-                <span class="ml-2 text-sm">South Bay</span>
-              </label>
+              <% allLocations.forEach(loc => { %>
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="locations" value="<%= loc %>" <%= typeof query !== 'undefined' && query.locations && (Array.isArray(query.locations) ? query.locations.includes(loc) : query.locations === loc) ? 'checked' : '' %> />
+                  <span class="checkmark"></span>
+                  <span class="ml-2 text-sm"><%= loc %></span>
+                </label>
+              <% }); %>
             </div>
           </div>
-
-
 
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Availability</h4>
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-600">In Stock Only</span>
               <label class="custom-switch">
-                <input type="checkbox" checked />
+                <input type="checkbox" name="inStock" value="true" <%= typeof query !== 'undefined' && query.inStock === 'true' ? 'checked' : '' %> />
                 <span class="switch-slider"></span>
               </label>
             </div>
           </div>
 
           <div class="flex flex-col gap-3">
-            <button
-              class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap"
-            >
-              Apply Filters
-            </button>
-            <button
-              class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button font-medium hover:bg-gray-50 transition-colors whitespace-nowrap"
-            >
-              Reset Filters
-            </button>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-green-600 transition-colors whitespace-nowrap">Apply Filters</button>
+            <button type="button" onclick="window.location='/browse'" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">Reset Filters</button>
           </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1">
           <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
-            <div
-              class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4"
-            >
-              <h1 class="text-2xl font-bold">Browse Products (48)</h1>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+              <h1 class="text-2xl font-bold">Browse Products (<%= totalProducts %>)</h1>
               <div class="flex md:justify-end items-center gap-3">
-                <button
-                  id="filter-button"
-                  class="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 whitespace-nowrap"
-                >
+                <button id="filter-button" class="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 whitespace-nowrap">
                   <i class="ri-filter-3-line"></i>
                   <span>Filters</span>
                 </button>
                 <div class="custom-select w-48">
-                  <div class="select-selected">
-                    <span>Sort by: Expiry Date</span>
-                    <i class="ri-arrow-down-s-line"></i>
-                  </div>
-                  <div class="select-items select-hide">
-                    <div>Sort by: Expiry Date</div>
-                    <div>Sort by: Discount %</div>
-                    <div>Sort by: Price (Low to High)</div>
-                    <div>Sort by: Price (High to Low)</div>
-                    <div>Sort by: Rating</div>
-                  </div>
+                  <select name="sortBy" onchange="document.getElementById('filterForm').submit()">
+                    <option value="expiryDate" <%= typeof query !== 'undefined' && query.sortBy === 'expiryDate' ? 'selected' : '' %>>Sort by: Expiry Date</option>
+                    <option value="discount" <%= typeof query !== 'undefined' && query.sortBy === 'discount' ? 'selected' : '' %>>Sort by: Discount %</option>
+                    <option value="priceLowHigh" <%= typeof query !== 'undefined' && query.sortBy === 'priceLowHigh' ? 'selected' : '' %>>Sort by: Price (Low to High)</option>
+                    <option value="priceHighLow" <%= typeof query !== 'undefined' && query.sortBy === 'priceHighLow' ? 'selected' : '' %>>Sort by: Price (High to Low)</option>
+                  </select>
                 </div>
-                <div
-                  class="flex items-center border border-gray-300 rounded-button overflow-hidden"
-                >
-                  <button
-                    class="w-10 h-10 flex items-center justify-center bg-primary text-white"
-                  >
-                    <i class="ri-layout-grid-line"></i>
-                  </button>
-                  <button
-                    class="w-10 h-10 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-100"
-                  >
-                    <i class="ri-list-check"></i>
-                  </button>
+                <div class="flex items-center gap-2">
+                  <span>Show:</span>
+                  <div class="custom-select w-20">
+                    <select name="show" onchange="document.getElementById('filterForm').submit()">
+                      <option value="16" <%= typeof query !== 'undefined' && query.show === '16' ? 'selected' : '' %>>16</option>
+                      <option value="32" <%= typeof query !== 'undefined' && query.show === '32' ? 'selected' : '' %>>32</option>
+                      <option value="48" <%= typeof query !== 'undefined' && query.show === '48' ? 'selected' : '' %>>48</option>
+                      <option value="All" <%= typeof query !== 'undefined' && query.show === 'All' ? 'selected' : '' %>>All</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="flex flex-wrap gap-2 mb-4">
-              <div
-                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
-              >
-                <span>Dairy</span>
-                <button class="ml-2 w-4 h-4 flex items-center justify-center">
-                  <i class="ri-close-line"></i>
-                </button>
-              </div>
-              <div
-                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
-              >
-                <span>Price: $0 - $10</span>
-                <button class="ml-2 w-4 h-4 flex items-center justify-center">
-                  <i class="ri-close-line"></i>
-                </button>
-              </div>
-              <div
-                class="bg-green-100 text-primary text-sm px-3 py-1 rounded-full flex items-center"
-              >
-                <span>Expires within 3 days</span>
-                <button class="ml-2 w-4 h-4 flex items-center justify-center">
-                  <i class="ri-close-line"></i>
-                </button>
-              </div>
-              <button class="text-primary text-sm hover:underline">
-                Clear All
-              </button>
-            </div>
-
-            <div
-              class="flex items-center justify-between text-sm text-gray-600"
-            >
-              <div>Showing 1-16 of 48 products</div>
-              <div class="flex items-center gap-2">
-                <span>Show:</span>
-                <div class="custom-select w-20">
-                  <div class="select-selected">
-                    <span>16</span>
-                    <i class="ri-arrow-down-s-line"></i>
-                  </div>
-                  <div class="select-items select-hide">
-                    <div>16</div>
-                    <div>32</div>
-                    <div>48</div>
-                    <div>All</div>
-                  </div>
-                </div>
-              </div>
+            <div class="flex items-center justify-between text-sm text-gray-600">
+              <div>Showing <%= (currentPage-1)*perPage+1 %>-<%= Math.min(currentPage*perPage, totalProducts) %> of <%= totalProducts %> products</div>
             </div>
           </div>
 
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          >
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <% products.forEach(product => { %>
-  <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md">
-    <div class="relative">
-      <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover object-top" />
-      <div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-        <%= Math.ceil((new Date(product.expiryDate) - new Date()) / (1000 * 60 * 60 * 24)) %> days left
-      </div>
-      <div class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full">
-        <%= product.category %>
-      </div>
-    </div>
-    <div class="p-4">
-      <h3 class="font-bold text-lg mb-1"><%= product.name %></h3>
-      <div class="flex items-center mb-2">
-        <span class="text-gray-500 line-through mr-2">₹<%= product.price %></span>
-        <span class="text-lg font-bold text-primary">₹<%= product.finalPrice || product.price %></span>
-        <% if (product.discount > 0) { %>
-          <span class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"><%= product.discount %>% off</span>
-        <% } %>
-      </div>
-      <div class="flex items-center text-sm text-gray-600 mb-3">
-        <i class="ri-calendar-line mr-1"></i>
-        <span>Expires: <%= new Date(product.expiryDate).toLocaleDateString() %></span>
-      </div>
-
-      <div class="flex gap-2">
-        <form action="/cart/add/<%= product._id %>" method="POST" class="flex-1">
-          <button type="submit" class="w-full bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors">Add to Cart</button>
-        </form>
-
-        <button 
-          onclick="toggleWishlist('<%= product._id %>', this)" 
-          class="wishlist-button w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button transition-colors <%= product.isWishlisted ? 'text-red-500' : 'text-primary' %>">
-          <i class="<%= product.isWishlisted ? 'ri-heart-fill' : 'ri-heart-line' %>"></i>
-        </button>
-
-
-
-      </div>
-    </div>
-  </div>
-<% }); %>
-
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-all hover:shadow-md">
+              <div class="relative">
+                <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover object-top" />
+                <div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  <%= Math.ceil((new Date(product.expiryDate) - new Date()) / (1000 * 60 * 60 * 24)) %> days left
+                </div>
+                <div class="absolute top-3 left-3 bg-green-100 text-primary text-xs font-bold px-2 py-1 rounded-full">
+                  <%= product.category %>
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1"><%= product.name %></h3>
+                <div class="flex items-center mb-2">
+                  <span class="text-gray-500 line-through mr-2">₹<%= product.price %></span>
+                  <span class="text-lg font-bold text-primary">₹<%= product.finalPrice || product.price %></span>
+                  <% if (product.discount > 0) { %>
+                    <span class="ml-2 bg-secondary text-white text-xs px-2 py-1 rounded-full"><%= product.discount %>% off</span>
+                  <% } %>
+                </div>
+                <div class="flex items-center text-sm text-gray-600 mb-3">
+                  <i class="ri-calendar-line mr-1"></i>
+                  <span>Expires: <%= new Date(product.expiryDate).toLocaleDateString() %></span>
+                </div>
+                <div class="flex gap-2">
+                  <form action="/cart/add/<%= product._id %>" method="POST" class="flex-1">
+                    <button type="submit" class="w-full bg-primary text-white font-medium py-2 rounded-button hover:bg-green-600 transition-colors">Add to Cart</button>
+                  </form>
+                  <button onclick="toggleWishlist('<%= product._id %>', this)" class="wishlist-button w-10 h-10 flex items-center justify-center bg-white border border-primary text-primary rounded-button transition-colors <%= product.isWishlisted ? 'text-red-500' : 'text-primary' %>">
+                    <i class="<%= product.isWishlisted ? 'ri-heart-fill' : 'ri-heart-line' %>"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+          </div>
         </div>
       </div>
-    </div>
+      </form>
 
     <div id="filter-overlay" class="filter-overlay"></div>
 
@@ -741,161 +520,56 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <h3 class="text-xl font-['Pacifico'] mb-4">ExpiryBuddy</h3>
-            <p class="text-gray-400 mb-4">
-              Helping you save money while reducing food waste in your
-              community.
-            </p>
+            <p class="text-gray-400 mb-4">Helping you save money while reducing food waste in your community.</p>
             <div class="flex space-x-4">
-              <a href="#" class="text-gray-400 hover:text-white">
-                <div class="w-8 h-8 flex items-center justify-center">
-                  <i class="ri-facebook-fill"></i>
-                </div>
-              </a>
-              <a href="#" class="text-gray-400 hover:text-white">
-                <div class="w-8 h-8 flex items-center justify-center">
-                  <i class="ri-twitter-fill"></i>
-                </div>
-              </a>
-              <a href="#" class="text-gray-400 hover:text-white">
-                <div class="w-8 h-8 flex items-center justify-center">
-                  <i class="ri-instagram-fill"></i>
-                </div>
-              </a>
-              <a href="#" class="text-gray-400 hover:text-white">
-                <div class="w-8 h-8 flex items-center justify-center">
-                  <i class="ri-linkedin-fill"></i>
-                </div>
-              </a>
+              <a href="#" class="text-gray-400 hover:text-white"><div class="w-8 h-8 flex items-center justify-center"><i class="ri-facebook-fill"></i></div></a>
+              <a href="#" class="text-gray-400 hover:text-white"><div class="w-8 h-8 flex items-center justify-center"><i class="ri-twitter-fill"></i></div></a>
+              <a href="#" class="text-gray-400 hover:text-white"><div class="w-8 h-8 flex items-center justify-center"><i class="ri-instagram-fill"></i></div></a>
+              <a href="#" class="text-gray-400 hover:text-white"><div class="w-8 h-8 flex items-center justify-center"><i class="ri-linkedin-fill"></i></div></a>
             </div>
           </div>
           <div>
             <h4 class="text-lg font-bold mb-4">Quick Links</h4>
             <ul class="space-y-2">
-              <li>
-                <a
-                  href="https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5"
-                  data-readdy="true"
-                  class="text-gray-400 hover:text-white"
-                  >Home</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >Browse Products</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >Upload Products</a
-                >
-              </li>
-              <li>
-
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >Our Impact</a
-                >
-              </li>
+              <li><a href="https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5" data-readdy="true" class="text-gray-400 hover:text-white">Home</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Browse Products</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Upload Products</a></li>
+              <li></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Our Impact</a></li>
             </ul>
           </div>
           <div>
             <h4 class="text-lg font-bold mb-4">For Users</h4>
             <ul class="space-y-2">
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >How It Works</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >Create Account</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >For Retailers</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white"
-                  >For Shelters</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-gray-400 hover:text-white">FAQs</a>
-              </li>
+              <li><a href="#" class="text-gray-400 hover:text-white">How It Works</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Create Account</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">For Retailers</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">For Shelters</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
             </ul>
           </div>
           <div>
             <h4 class="text-lg font-bold mb-4">Contact Us</h4>
             <ul class="space-y-2">
-              <li class="flex items-center">
-                <div
-                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
-                >
-                  <i class="ri-mail-line"></i>
-                </div>
-                <a
-                  href="mailto:info@expirybuddy.com"
-                  class="text-gray-400 hover:text-white"
-                  >info@expirybuddy.com</a
-                >
-              </li>
-              <li class="flex items-center">
-                <div
-                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
-                >
-                  <i class="ri-phone-line"></i>
-                </div>
-                <a href="tel:+1234567890" class="text-gray-400 hover:text-white"
-                  >+1 (234) 567-890</a
-                >
-              </li>
-              <li class="flex items-center">
-                <div
-                  class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"
-                >
-                  <i class="ri-map-pin-line"></i>
-                </div>
-                <span class="text-gray-400"
-                  >123 Green Street, Anytown, USA</span
-                >
-              </li>
+              <li class="flex items-center"><div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"><i class="ri-mail-line"></i></div><a href="mailto:info@expirybuddy.com" class="text-gray-400 hover:text-white">info@expirybuddy.com</a></li>
+              <li class="flex items-center"><div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"><i class="ri-phone-line"></i></div><a href="tel:+1234567890" class="text-gray-400 hover:text-white">+1 (234) 567-890</a></li>
+              <li class="flex items-center"><div class="w-5 h-5 flex items-center justify-center mr-2 text-gray-400"><i class="ri-map-pin-line"></i></div><span class="text-gray-400">123 Green Street, Anytown, USA</span></li>
             </ul>
           </div>
         </div>
-        <div
-          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center"
-        >
-          <p class="text-gray-400 text-sm mb-4 md:mb-0">
-            &copy; 2025 ExpiryBuddy. All rights reserved.
-          </p>
+        <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 ExpiryBuddy. All rights reserved.</p>
           <div class="flex flex-wrap justify-center gap-4">
-            <a href="#" class="text-gray-400 hover:text-white text-sm"
-              >Privacy Policy</a
-            >
-            <a href="#" class="text-gray-400 hover:text-white text-sm"
-              >Terms of Service</a
-            >
-            <a href="#" class="text-gray-400 hover:text-white text-sm"
-              >Cookie Policy</a
-            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+            <a href="#" class="text-gray-400 hover:text-white text-sm">Cookie Policy</a>
           </div>
           <div class="flex items-center mt-4 md:mt-0">
             <div class="flex space-x-3">
-              <div class="w-8 h-5 flex items-center justify-center">
-                <i class="ri-visa-fill text-gray-400 text-xl"></i>
-              </div>
-              <div class="w-8 h-5 flex items-center justify-center">
-                <i class="ri-mastercard-fill text-gray-400 text-xl"></i>
-              </div>
-              <div class="w-8 h-5 flex items-center justify-center">
-                <i class="ri-paypal-fill text-gray-400 text-xl"></i>
-              </div>
-              <div class="w-8 h-5 flex items-center justify-center">
-                <i class="ri-apple-fill text-gray-400 text-xl"></i>
-              </div>
+              <div class="w-8 h-5 flex items-center justify-center"><i class="ri-visa-fill text-gray-400 text-xl"></i></div>
+              <div class="w-8 h-5 flex items-center justify-center"><i class="ri-mastercard-fill text-gray-400 text-xl"></i></div>
+              <div class="w-8 h-5 flex items-center justify-center"><i class="ri-paypal-fill text-gray-400 text-xl"></i></div>
+              <div class="w-8 h-5 flex items-center justify-center"><i class="ri-apple-fill text-gray-400 text-xl"></i></div>
             </div>
           </div>
         </div>
@@ -904,48 +578,11 @@
 
     <script id="custom-select-script">
       document.addEventListener("DOMContentLoaded", function () {
-        const customSelects = document.querySelectorAll(".custom-select");
-        customSelects.forEach((select) => {
-          const selectedDiv = select.querySelector(".select-selected");
-          const itemsDiv = select.querySelector(".select-items");
-          const items = itemsDiv.querySelectorAll("div");
-
-          selectedDiv.addEventListener("click", function (e) {
-            e.stopPropagation();
-            closeAllSelect(this);
-            itemsDiv.classList.toggle("select-hide");
-            this.classList.toggle("select-arrow-active");
-          });
-
-          items.forEach((item) => {
-            item.addEventListener("click", function () {
-              const selectedSpan = selectedDiv.querySelector("span");
-              selectedSpan.textContent = this.textContent;
-              const sameAsSelected = itemsDiv.querySelector(".same-as-selected");
-              if (sameAsSelected) {
-                sameAsSelected.classList.remove("same-as-selected");
-              }
-              this.classList.add("same-as-selected");
-              selectedDiv.click();
-            });
-          });
-        });
-
-        function closeAllSelect(elmnt) {
-          const items = document.querySelectorAll(".select-items");
-          const selected = document.querySelectorAll(".select-selected");
-          items.forEach((item, idx) => {
-            if (elmnt != selected[idx]) {
-              item.classList.add("select-hide");
-              selected[idx].classList.remove("select-arrow-active");
-            }
-          });
-        }
-
-        document.addEventListener("click", closeAllSelect);
+        // Remove grid/list view toggle if present
+        const gridListToggle = document.querySelector('.flex.items-center.border.border-gray-300.rounded-button.overflow-hidden');
+        if (gridListToggle) gridListToggle.remove();
       });
     </script>
-
     <script id="price-range-script">
       document.addEventListener("DOMContentLoaded", function () {
         const minRange = document.querySelector(".price-min-range");
@@ -965,14 +602,14 @@
             return;
           }
 
-          const leftPercent = (minVal / minRange.max) * 100;
-          const rightPercent = 100 - (maxVal / maxRange.max) * 100;
+          const leftPercent = ((minVal - parseInt(minRange.min)) / (parseInt(minRange.max) - parseInt(minRange.min))) * 100;
+          const rightPercent = 100 - ((maxVal - parseInt(maxRange.min)) / (parseInt(maxRange.max) - parseInt(maxRange.min))) * 100;
 
           rangeSelected.style.left = leftPercent + "%";
           rangeSelected.style.right = rightPercent + "%";
 
-          minValue.textContent = "$" + minVal;
-          maxValue.textContent = "$" + maxVal;
+          minValue.textContent = "₹" + minVal;
+          maxValue.textContent = "₹" + maxVal;
           minInput.value = minVal;
           maxInput.value = maxVal;
         }
@@ -982,7 +619,7 @@
 
         minInput.addEventListener("input", function () {
           let val = parseInt(this.value);
-          if (isNaN(val)) val = 0;
+          if (isNaN(val)) val = parseInt(minRange.min);
           if (val > parseInt(maxInput.value)) val = parseInt(maxInput.value);
           minRange.value = val;
           updateRangeValues();
@@ -990,9 +627,9 @@
 
         maxInput.addEventListener("input", function () {
           let val = parseInt(this.value);
-          if (isNaN(val)) val = 50;
+          if (isNaN(val)) val = parseInt(maxRange.max);
           if (val < parseInt(minInput.value)) val = parseInt(minInput.value);
-          if (val > 50) val = 50;
+          if (val > parseInt(maxRange.max)) val = parseInt(maxRange.max);
           maxRange.value = val;
           updateRangeValues();
         });
@@ -1000,9 +637,6 @@
         updateRangeValues();
       });
     </script>
-
-
-
     <script id="mobile-filter-script">
       document.addEventListener("DOMContentLoaded", function () {
         const filterButton = document.getElementById("filter-button");
@@ -1010,11 +644,13 @@
         const filterOverlay = document.getElementById("filter-overlay");
         const closeFilterButton = document.getElementById("close-filter");
 
-        filterButton.addEventListener("click", function () {
-          filterSidebar.classList.add("active");
-          filterOverlay.classList.add("active");
-          document.body.style.overflow = "hidden";
-        });
+        if (filterButton) {
+          filterButton.addEventListener("click", function () {
+            filterSidebar.classList.add("active");
+            filterOverlay.classList.add("active");
+            document.body.style.overflow = "hidden";
+          });
+        }
 
         function closeFilter() {
           filterSidebar.classList.remove("active");
@@ -1022,46 +658,31 @@
           document.body.style.overflow = "";
         }
 
-        closeFilterButton.addEventListener("click", closeFilter);
-        filterOverlay.addEventListener("click", closeFilter);
+        if (closeFilterButton) closeFilterButton.addEventListener("click", closeFilter);
+        if (filterOverlay) filterOverlay.addEventListener("click", closeFilter);
       });
     </script>
-
     <script id="mobile-menu-script">
       document.addEventListener("DOMContentLoaded", function () {
         const menuButton = document.getElementById("mobile-menu-button");
-
         if (menuButton) {
           menuButton.addEventListener("click", function () {
             const mobileMenu = document.createElement("div");
-            mobileMenu.className =
-              "fixed inset-0 bg-gray-800 bg-opacity-90 z-50 flex flex-col";
-
+            mobileMenu.className = "fixed inset-0 bg-gray-800 bg-opacity-90 z-50 flex flex-col";
             const header = document.createElement("div");
-            header.className =
-              "flex justify-between items-center p-4 border-b border-gray-700";
-
+            header.className = "flex justify-between items-center p-4 border-b border-gray-700";
             const logo = document.createElement("div");
             logo.className = "text-primary text-2xl font-['Pacifico']";
             logo.textContent = "ExpiryBuddy";
-
             const closeButton = document.createElement("button");
             closeButton.className = "text-white text-2xl";
             closeButton.innerHTML = '<i class="ri-close-line"></i>';
-
             header.appendChild(logo);
             header.appendChild(closeButton);
-
             const nav = document.createElement("nav");
             nav.className = "flex-1 overflow-y-auto p-4";
-
             const links = [
-              {
-                text: "Home",
-                active: false,
-                url: "https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5",
-                dataReaddy: true,
-              },
+              { text: "Home", active: false, url: "https://readdy.ai/home/4e7bcec1-8bfd-493d-83c1-fcf514c9941b/09cd3cab-eb19-4a4c-9af5-15d5ab0b82c5", dataReaddy: true },
               { text: "Browse", active: true },
               { text: "Upload", active: false },
               { text: "Donations", active: false },
@@ -1069,14 +690,11 @@
               { text: "Our Impact", active: false },
               { text: "Contact Us", active: false },
             ];
-
             const ul = document.createElement("ul");
             ul.className = "space-y-4";
-
             links.forEach((link) => {
               const li = document.createElement("li");
               const a = document.createElement("a");
-
               if (link.url) {
                 a.href = link.url;
                 if (link.dataReaddy) {
@@ -1085,23 +703,16 @@
               } else {
                 a.href = "#";
               }
-
-              a.className = link.active
-                ? "text-primary text-xl font-medium block py-2"
-                : "text-white text-xl font-medium block py-2";
+              a.className = link.active ? "text-primary text-xl font-medium block py-2" : "text-white text-xl font-medium block py-2";
               a.textContent = link.text;
-
               li.appendChild(a);
               ul.appendChild(li);
             });
-
             nav.appendChild(ul);
             mobileMenu.appendChild(header);
             mobileMenu.appendChild(nav);
-
             document.body.appendChild(mobileMenu);
             document.body.style.overflow = "hidden";
-
             closeButton.addEventListener("click", function () {
               document.body.removeChild(mobileMenu);
               document.body.style.overflow = "";
@@ -1110,22 +721,16 @@
         }
       });
     </script>
-
     <script>
       async function toggleWishlist(productId, button) {
         const icon = button.querySelector("i");
         const isWishlisted = icon.classList.contains("ri-heart-fill");
-
         try {
           const res = await fetch(`/wishlist/${isWishlisted ? "remove" : "add"}/${productId}`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            }
+            headers: { "Content-Type": "application/json" }
           });
-
           if (res.ok) {
-            // Toggle icon and color
             icon.classList.toggle("ri-heart-line");
             icon.classList.toggle("ri-heart-fill");
             button.classList.toggle("text-primary");
@@ -1138,7 +743,5 @@
         }
       }
     </script>
-
-
   </body>
 </html>

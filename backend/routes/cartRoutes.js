@@ -54,6 +54,8 @@ router.post("/remove/:productId", async (req, res) => {
   if (!req.session.userId) return res.status(403).send("Login required");
 
   await Cart.deleteOne({ userId: req.session.userId, productId: req.params.productId });
+  console.log("Cart items:", items.map(item => item.productId));
+
   res.redirect("/cart");
 });
 

@@ -7,16 +7,18 @@ const moveProductToHistory = async (product, wasSold = false) => {
       : null;
 
     const historyData = {
+      productId: product._id,                    // ✅ Add this
       name: product.name,
       category: product.category,
       price: product.price,
-      quantity: product.quantity,
+      finalPrice: product.finalPrice,            // ✅ Add this
+      quantity: product.quantity,                // ✅ Must be passed from cart
       sellerName: product.sellerName,
-      sellerType: "small", // optional logic: make it dynamic later
+      sellerType: "small", // optional logic
       expiryDate: product.expiryDate,
-      views: product.views,
-      clicks: product.clicks,
-      wishlistCount: product.wishlistCount,
+      views: product.views || 0,
+      clicks: product.clicks || 0,
+      wishlistCount: product.wishlistCount || 0,
       soldInDays,
       wasSold,
       discount: product.discount,

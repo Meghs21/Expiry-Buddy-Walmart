@@ -76,6 +76,9 @@ app.use("/api", retailerRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/cart", cartRoutes);
 app.use("/api", donationRoutes);
+// For HTML form submissions (non-API routes)
+app.use("/products", productRoutes);
+
 
 
 // ORIGINALL HOMEEEE
@@ -129,7 +132,8 @@ app.get("/wishlist", async (req, res) => {
     }
     
     const wishlist = await Wishlist.find({ userId: req.session.userId }).populate("productId");
-    res.render("wishlist", { wishlist });
+
+    res.render('wishlist', { wishlist }); 
   } catch (err) {
     console.error(err);
     res.status(500).send("Failed to load wishlist");
@@ -227,21 +231,92 @@ app.post("/upload", async (req, res) => {
 
 app.get("/browse", async (req, res) => {
   try {
-    const products = await Product.find();
+    // Parse filters from query
+    const {
+      priceMin,
+      priceMax,
+      categories,
+      locations,
+      expiryFrom,
+      expiryTo,
+      inStock,
+      sortBy,
+      show,
+      page
+    } = req.query;
 
+    // Build MongoDB query
+    const query = {};
+    if (priceMin || priceMax) {
+      query.finalPrice = {};
+      if (priceMin) query.finalPrice.$gte = Number(priceMin);
+      if (priceMax) query.finalPrice.$lte = Number(priceMax);
+    }
+    if (categories) {
+      const cats = Array.isArray(categories) ? categories : [categories];
+      if (!cats.includes("All Categories")) query.category = { $in: cats };
+    }
+    if (locations) {
+      const locs = Array.isArray(locations) ? locations : [locations];
+      if (!locs.includes("All Locations")) query.location = { $in: locs };
+    }
+    if (expiryFrom || expiryTo) {
+      query.expiryDate = {};
+      if (expiryFrom) query.expiryDate.$gte = new Date(expiryFrom);
+      if (expiryTo) query.expiryDate.$lte = new Date(expiryTo);
+    }
+    if (inStock === "true") {
+      query.quantity = { $gt: 0 };
+    }
+
+    // Sorting
+    let sort = { expiryDate: 1 };
+    if (sortBy === "discount") sort = { discount: -1 };
+    else if (sortBy === "priceLowHigh") sort = { finalPrice: 1 };
+    else if (sortBy === "priceHighLow") sort = { finalPrice: -1 };
+    // else expiryDate default
+
+    // Pagination
+    const perPage = show === "All" ? 1000 : Number(show) || 16;
+    const currentPage = Number(page) || 1;
+    const skip = (currentPage - 1) * perPage;
+
+    // Get total count for display
+    const totalProducts = await Product.countDocuments(query);
+
+    // Fetch products
+    const products = await Product.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(perPage);
+
+    // Wishlist logic
     let wishlist = [];
     if (req.session.userId) {
       wishlist = await Wishlist.find({ userId: req.session.userId }).select("productId");
     }
-
     const wishlistIds = wishlist.map(w => w.productId.toString());
-
     const productsWithFlags = products.map(product => ({
       ...product.toObject(),
       isWishlisted: wishlistIds.includes(product._id.toString()),
     }));
 
-    res.render("browse", { products: productsWithFlags });
+    // For dynamic filter options (categories, locations, price range)
+    const allCategories = await Product.distinct("category");
+    const allLocations = await Product.distinct("location");
+    const minPrice = await Product.find().sort({ finalPrice: 1 }).limit(1).then(p => p[0]?.finalPrice || 0);
+    const maxPrice = await Product.find().sort({ finalPrice: -1 }).limit(1).then(p => p[0]?.finalPrice || 1000);
+
+    res.render("browse", {
+      products: productsWithFlags,
+      totalProducts,
+      allCategories,
+      allLocations,
+      minPrice,
+      maxPrice,
+      perPage,
+      currentPage
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Failed to load browse page");
@@ -283,17 +358,29 @@ app.post("/checkout", async (req, res) => {
     const cartItems = await Cart.find({ userId: req.session.userId }).populate("productId");
 
     for (const item of cartItems) {
-      const product = item.productId;
+  const product = item.productId;
 
-      if (!product) continue;
+  if (!product) continue;
 
-      // Move product to history and mark as sold
-      await moveProductToHistory(product, true);
-      await Product.findByIdAndDelete(product._id); // or use isSold if you prefer
+  const cartQty = item.quantity;
+  const remainingQty = product.quantity - cartQty;
 
-      // Remove from cart
-      await Cart.findByIdAndDelete(item._id);
-    }
+  if (remainingQty <= 0) {
+    // All units sold, move to history and delete
+    await moveProductToHistory({ ...product.toObject(), quantity: cartQty }, true);
+    await Product.findByIdAndDelete(product._id);
+  } else {
+    // Partial sale, update product quantity
+    await Product.findByIdAndUpdate(product._id, { $set: { quantity: remainingQty } });
+
+    // Optional: Save a partial sale entry in history
+    await moveProductToHistory({ ...product.toObject(), quantity: cartQty }, true);
+  }
+
+  // Remove from cart
+  await Cart.findByIdAndDelete(item._id);
+}
+
 
     res.send("<h2>✅ Checkout complete! Products sold and cart cleared.</h2><a href='/browse'>Browse more</a>");
   } catch (error) {
@@ -331,8 +418,10 @@ for (const product of expiredProducts) {
   // Delete from Products collection
   await Product.findByIdAndDelete(product._id);
 }
+  await Cart.deleteMany({ productId: { $in: expiredProductIds } });
+  await Wishlist.deleteMany({ productId: { $in: expiredProductIds } });
 
-console.log(`✅ Archived and donated ${expiredProducts.length} expired products.`);
+  console.log(`✅ Archived and donated ${expiredProducts.length} expired products.`);
 } catch (err) {
 console.error("❌ Error in daily cron job:", err);
 }
@@ -356,6 +445,9 @@ console.error("❌ Error in daily cron job:", err);
 
     await Product.findByIdAndDelete(product._id);
   }
+
+  const cartResult = await Cart.deleteMany({ productId: { $in: expiredProducts } });
+  const wishlistResult = await Wishlist.deleteMany({ productId: { $in: expiredProducts } });
 
   console.log(`✅ Manually processed ${expiredProducts.length} expired products.`);
 })();

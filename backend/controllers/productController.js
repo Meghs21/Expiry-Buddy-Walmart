@@ -59,6 +59,8 @@ res.status(500).json({ error: "Server error" });
 // For HTML form submissions creating a product
 exports.createProductForm = async (req, res) => {
   try {
+    console.log("🟡 Incoming data:", req.body);
+
     const {
       name,
       category,
@@ -85,8 +87,8 @@ exports.createProductForm = async (req, res) => {
       is_perishable: is_perishable === "on",
     });
 
-    await newProduct.save();
-    console.log("✅ Product saved (form):", newProduct);
+    const saved = await newProduct.save();
+    console.log("✅ Product saved yippeee(form):", saved);
 
     res.redirect("/retailer");
   } catch (err) {

@@ -1,14 +1,23 @@
 const Product = require("../models/Product");
 const ProductHistory = require("../models/ProductHistory");
+const Cart = require("../models/Cart");
 
 async function handleProductSold(req, res) {
   const productId = req.params.id;
+  const userId = req.session.userId; // ✅ Use session-based ID
 
   try {
     const product = await Product.findById(productId);
     if (!product) return res.status(404).send("❌ Product not found");
 
-    const soldInDays = Math.ceil((Date.now() - product.createdAt.getTime()) / (1000 * 60 * 60 * 24));
+    const cartItem = await Cart.findOne({ userId, productId });
+    if (!cartItem) return res.status(404).send("❌ Product not found in cart");
+
+    const soldQuantity = cartItem.quantity;
+
+    const soldInDays = Math.ceil(
+      (Date.now() - product.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
     const historyData = {
       productId: product._id,
@@ -17,8 +26,8 @@ async function handleProductSold(req, res) {
       price: product.price,
       discount: product.discount,
       finalPrice: product.finalPrice,
-      quantity: product.quantity,
-      views: 0, // Replace later with real values
+      quantity: soldQuantity,
+      views: 0,
       clicks: 0,
       wishlistCount: 0,
       sellerName: product.sellerName,
@@ -30,14 +39,9 @@ async function handleProductSold(req, res) {
       wasSold: true,
     };
 
-    // Save to history
     await ProductHistory.create(historyData);
 
-    // Option 1: Mark as sold (preferred if keeping record in products)
-    //await Product.findByIdAndUpdate(productId, { isSold: true });
-
-    // Option 2: Delete it completely
-    // await Product.findByIdAndDelete(productId);
+    await Cart.deleteOne({ userId, productId });
 
     res.send("✅ Product marked as sold and recorded in history.");
   } catch (error) {

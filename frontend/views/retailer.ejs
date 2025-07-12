@@ -158,12 +158,7 @@
         </div>
       </div>
 
-      <!-- Form Section -->
-      <div class="bg-white rounded-xl shadow-md p-6 mb-10">
-        <h2 class="text-2xl font-semibold mb-6 text-gray-800">
-          Upload Your Product
-        </h2>
-
+      
         <!-- <form id="product-form"  action="/products" method="POST">
           <div class="mb-8">
             <h3 class="text-lg font-medium mb-4 pb-2 border-b border-gray-100">
@@ -364,8 +359,13 @@
               >
             </div>
           </div> -->
-          
-          <form id="product-form" action="/products" method="POST">
+          <!-- Form Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-10">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800">
+               Upload Your Product
+             </h2>
+
+          <form id="product-form" action="/products" method="POST" enctype="application/x-www-form-urlencoded">
            <!-- Basic Info Section -->
             <div class="mb-8">
              <h3 class="text-lg font-medium mb-4 pb-2 border-b border-gray-100">
@@ -566,28 +566,24 @@
 
     <script id="form-validation">
       document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("product-form");
+        //const form = document.getElementById("product-form");
         const donateBtn = document.getElementById("donate-btn");
 
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
+        
+      //   form.addEventListener("submit", function () {
+      //   const productName = document.getElementById("product-name").value;
+      //   const category = document.getElementById("category").value;
+      //   const price = document.getElementById("original-price").value;
 
-          // Basic validation
-          const productName = document.getElementById("product-name").value;
-          const category = document.getElementById("category").value;
-          const price = document.getElementById("original-price").value;
+      //   if (!productName || !category || !price) {
+      //   alert("Please fill in all required fields...");
+      //   return;
+      // }
 
-          if (!productName || !category || !price) {
-            alert(
-              "Please fill in all required fields: Product Name, Category, and Original Price",
-            );
-            return;
-          }
+      // alert("Product successfully uploaded for sale!");
+      // // DO NOT preventDefault. Let it submit
+      //  });
 
-          // Success message (in a real app, this would submit data to a server)
-          alert("Product successfully uploaded for sale!");
-          form.reset();
-        });
 
         donateBtn.addEventListener("click", function () {
           const productName = document.getElementById("product-name").value;
