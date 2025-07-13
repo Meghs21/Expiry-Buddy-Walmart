@@ -3,8 +3,8 @@ const router = express.Router();
 const {
   getProducts,
   getProductById,
-  createProductForm,  // 🆕 for HTML form
-  createProductAPI,   // 🆕 for fetch/postman
+  createProductForm,
+  createProductAPI,   
   updateProduct,
   deleteProduct,
 } = require("../controllers/productController");
@@ -16,8 +16,8 @@ const moveProductToHistory = require("../utils/moveToHistory");
 // Define routes
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.post("/", createProductForm); // 👈 for form submissions
-router.post("/api", createProductAPI); // 👈 for fetch/ajax/api usage
+router.post("/", createProductForm); 
+router.post("/api", createProductAPI); 
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 
@@ -27,15 +27,15 @@ router.delete("/:id", deleteProduct);
 router.post("/sell/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).send("❌ Product not found");
+    if (!product) return res.status(404).send("Product not found");
 
     await moveProductToHistory(product, true);
     await product.remove();
 
-    res.send("✅ Product sold and moved to history");
+    res.send("Product sold and moved to history");
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to move product to history");
+    res.status(500).send("Failed to move product to history");
   }
 });
 
@@ -49,10 +49,10 @@ router.post("/archiveExpired", async (req, res) => {
       await product.remove();
     }
 
-    res.send(`✅ Archived ${expiredProducts.length} expired products`);
+    res.send(`Archived ${expiredProducts.length} expired products`);
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to archive expired products");
+    res.status(500).send("Failed to archive expired products");
   }
 });
 
@@ -60,7 +60,7 @@ router.post("/archiveExpired", async (req, res) => {
 router.get("/view/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).send("❌ Product not found");
+    if (!product) return res.status(404).send("Product not found");
 
     product.views += 1;
     await product.save();
@@ -68,7 +68,7 @@ router.get("/view/:id", async (req, res) => {
     res.redirect(`/products/${product._id}`); // redirect to existing detail route
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to update views");
+    res.status(500).send("Failed to update views");
   }
 });
 
@@ -76,18 +76,18 @@ router.get("/view/:id", async (req, res) => {
 router.post("/wishlist/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).send("❌ Product not found");
+    if (!product) return res.status(404).send("Product not found");
 
     product.wishlistCount += 1;
     await product.save();
 
-    res.json({ message: "✅ Added to wishlist" });
+    res.json({ message: "Added to wishlist" });
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to update wishlist count");
+    res.status(500).send("Failed to update wishlist count");
   }
 });
 
 
-// ✅ Export everything at the end
+// Export everything at the end
 module.exports = router;

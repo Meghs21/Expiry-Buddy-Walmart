@@ -353,42 +353,20 @@
             </button>
           </div>
 
-          <div class="mb-6">
-            <h4 class="font-medium text-gray-800 mb-3">Price Range</h4>
-            <div class="flex items-center justify-between mb-2">
-              <span id="price-min" class="text-sm text-gray-600">₹<%= minPrice %></span>
-              <span id="price-max" class="text-sm text-gray-600">₹<%= maxPrice %></span>
-            </div>
-            <div class="range-slider mb-4">
-              <div class="range-selected" id="price-range-selected"></div>
-              <div class="range-input">
-                <input type="range" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMin ? query.priceMin : minPrice %>" class="price-min-range" name="priceMin" />
-                <input type="range" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMax ? query.priceMax : maxPrice %>" class="price-max-range" name="priceMax" />
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="relative flex-1">
-                <input type="number" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMin ? query.priceMin : minPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" id="price-min-input" name="priceMin" />
-                <div class="absolute left-3 top-2 text-gray-500 text-sm">₹</div>
-              </div>
-              <span class="text-gray-400">-</span>
-              <div class="relative flex-1">
-                <input type="number" min="<%= minPrice %>" max="<%= maxPrice %>" value="<%= typeof query !== 'undefined' && query.priceMax ? query.priceMax : maxPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" id="price-max-input" name="priceMax" />
-                <div class="absolute left-3 top-2 text-gray-500 text-sm">₹</div>
-              </div>
-            </div>
-          </div>
+      <div class="mb-6">
+        <!-- Price Range filter removed as requested -->
+      </div>
 
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Expiry Date Range</h4>
             <div class="space-y-3">
               <div>
                 <label class="block text-sm text-gray-600 mb-1">From</label>
-                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryFrom" value="<%= typeof query !== 'undefined' && query.expiryFrom ? query.expiryFrom : '' %>" />
+                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryFrom" value="<%= typeof query !== 'undefined' && query.expiryFrom ? query.expiryFrom : '' %>" onchange="document.getElementById('filterForm').submit()" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1">To</label>
-                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryTo" value="<%= typeof query !== 'undefined' && query.expiryTo ? query.expiryTo : '' %>" />
+                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" name="expiryTo" value="<%= typeof query !== 'undefined' && query.expiryTo ? query.expiryTo : '' %>" onchange="document.getElementById('filterForm').submit()" />
               </div>
             </div>
           </div>
@@ -396,6 +374,11 @@
           <div class="mb-6">
             <h4 class="font-medium text-gray-800 mb-3">Categories</h4>
             <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+              <label class="custom-checkbox">
+                <input type="checkbox" name="categories" value="All Categories" <%= typeof query !== 'undefined' && query.categories && (Array.isArray(query.categories) ? query.categories.includes('All Categories') : query.categories === 'All Categories') ? 'checked' : '' %> />
+                <span class="checkmark"></span>
+                <span class="ml-2 text-sm">All Categories</span>
+              </label>
               <% allCategories.forEach(cat => { %>
                 <label class="custom-checkbox">
                   <input type="checkbox" name="categories" value="<%= cat %>" <%= typeof query !== 'undefined' && query.categories && (Array.isArray(query.categories) ? query.categories.includes(cat) : query.categories === cat) ? 'checked' : '' %> />
@@ -407,27 +390,11 @@
           </div>
 
           <div class="mb-6">
-            <h4 class="font-medium text-gray-800 mb-3">Store Location</h4>
-            <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
-              <% allLocations.forEach(loc => { %>
-                <label class="custom-checkbox">
-                  <input type="checkbox" name="locations" value="<%= loc %>" <%= typeof query !== 'undefined' && query.locations && (Array.isArray(query.locations) ? query.locations.includes(loc) : query.locations === loc) ? 'checked' : '' %> />
-                  <span class="checkmark"></span>
-                  <span class="ml-2 text-sm"><%= loc %></span>
-                </label>
-              <% }); %>
-            </div>
+            <!-- Store Location filter removed as requested -->
           </div>
 
           <div class="mb-6">
-            <h4 class="font-medium text-gray-800 mb-3">Availability</h4>
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-600">In Stock Only</span>
-              <label class="custom-switch">
-                <input type="checkbox" name="inStock" value="true" <%= typeof query !== 'undefined' && query.inStock === 'true' ? 'checked' : '' %> />
-                <span class="switch-slider"></span>
-              </label>
-            </div>
+            <!-- Availability and In Stock filter removed as requested -->
           </div>
 
           <div class="flex flex-col gap-3">
@@ -454,17 +421,7 @@
                     <option value="priceHighLow" <%= typeof query !== 'undefined' && query.sortBy === 'priceHighLow' ? 'selected' : '' %>>Sort by: Price (High to Low)</option>
                   </select>
                 </div>
-                <div class="flex items-center gap-2">
-                  <span>Show:</span>
-                  <div class="custom-select w-20">
-                    <select name="show" onchange="document.getElementById('filterForm').submit()">
-                      <option value="16" <%= typeof query !== 'undefined' && query.show === '16' ? 'selected' : '' %>>16</option>
-                      <option value="32" <%= typeof query !== 'undefined' && query.show === '32' ? 'selected' : '' %>>32</option>
-                      <option value="48" <%= typeof query !== 'undefined' && query.show === '48' ? 'selected' : '' %>>48</option>
-                      <option value="All" <%= typeof query !== 'undefined' && query.show === 'All' ? 'selected' : '' %>>All</option>
-                    </select>
-                  </div>
-                </div>
+               
               </div>
             </div>
             <div class="flex items-center justify-between text-sm text-gray-600">
@@ -508,6 +465,30 @@
               </div>
             </div>
           <% }); %>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div class="flex justify-center items-center space-x-4 mt-6">
+            <% const totalPages = Math.ceil(totalProducts / perPage); %>
+            <% if (currentPage > 1) { %>
+              <a href="?<%= new URLSearchParams({ ...query, page: currentPage - 1 }).toString() %>" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-green-600 transition-colors">Previous</a>
+            <% } else { %>
+              <span class="px-4 py-2 bg-gray-300 text-gray-600 rounded-button cursor-not-allowed">Previous</span>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <% if (i === currentPage) { %>
+                <span class="px-4 py-2 bg-primary text-white rounded-button font-bold"><%= i %></span>
+              <% } else { %>
+                <a href="?<%= new URLSearchParams({ ...query, page: i }).toString() %>" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 transition-colors"><%= i %></a>
+              <% } %>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+              <a href="?<%= new URLSearchParams({ ...query, page: currentPage + 1 }).toString() %>" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-green-600 transition-colors">Next</a>
+            <% } else { %>
+              <span class="px-4 py-2 bg-gray-300 text-gray-600 rounded-button cursor-not-allowed">Next</span>
+            <% } %>
           </div>
         </div>
       </div>

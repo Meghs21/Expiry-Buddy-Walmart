@@ -315,7 +315,8 @@ app.get("/browse", async (req, res) => {
       minPrice,
       maxPrice,
       perPage,
-      currentPage
+      currentPage,
+      query: req.query
     });
   } catch (err) {
     console.error(err);

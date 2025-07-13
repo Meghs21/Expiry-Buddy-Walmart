@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
     res.render("wishlist", { wishlist: items });
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to load wishlist");
+    res.status(500).send("Failed to load wishlist");
   }
 });
 
@@ -31,7 +31,7 @@ router.post("/add/:productId", async (req, res) => {
     res.redirect("/wishlist");
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to add to wishlist");
+    res.status(500).send("Failed to add to wishlist");
   }
 });
 
@@ -44,7 +44,7 @@ router.post("/remove/:productId", async (req, res) => {
     res.redirect("/wishlist");
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Failed to remove from wishlist");
+    res.status(500).send("Failed to remove from wishlist");
   }
 });
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const Customer = require("../models/Customer");
 const bcrypt = require("bcryptjs");
 
-// 📝 Customer Signup
+// Customer Signup
 router.post("/customers/signup", async (req, res) => {
   try {
     const { fullName, email, phone, password } = req.body;
@@ -13,7 +13,7 @@ router.post("/customers/signup", async (req, res) => {
       return res.redirect("/signup?error=exists"); // Already registered
     }
 
-    // ✅ No need to hash manually if model has pre-save hook
+    // No need to hash manually if model has pre-save hook
     const customer = new Customer({
       fullName,
       email,
@@ -34,7 +34,7 @@ router.post("/customers/signup", async (req, res) => {
   }
 });
 
-// 🔐 Customer Login
+// Customer Login
 router.post("/customers/login", async (req, res) => {
   try {
     const { email, password } = req.body;

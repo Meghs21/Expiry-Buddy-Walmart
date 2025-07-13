@@ -21,9 +21,9 @@ exports.addDummyHistory = async (req, res) => {
     });
 
     await sample.save();
-    res.status(201).send("✅ Dummy ProductHistory inserted");
+    res.status(201).send("Dummy ProductHistory inserted");
   } catch (err) {
     console.error(err);
-    res.status(500).send("❌ Error inserting history data");
+    res.status(500).send("Error inserting history data");
   }
 };

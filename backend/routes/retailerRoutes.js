@@ -61,13 +61,13 @@
 
 // module.exports = router;
 
-// 🔐 Retailer Sign Up
+// Retailer Sign Up
 const express = require("express");
 const router = express.Router();
 const Retailer = require("../models/Retailer");
 const bcrypt = require("bcryptjs");
 
-// 🔐 Retailer Sign Up
+// Retailer Sign Up
 router.post("/retailers/signup", async (req, res) => {
   try {
     const { businessName, licenseNumber, email, password } = req.body;
@@ -93,7 +93,7 @@ router.post("/retailers/signup", async (req, res) => {
     req.session.userId = retailer._id;
     req.session.userRole = "retailer";
 
-    // ✅ Signup successful — redirect to /retailer page
+    // Signup successful — redirect to /retailer page
     return res.redirect("/retailer");
 
   } catch (err) {
@@ -103,7 +103,7 @@ router.post("/retailers/signup", async (req, res) => {
   }
 });
 
-// 🔓 Retailer Login
+// Retailer Login
 router.post("/retailers/login", async (req, res) => {
   try {
     const { email, password } = req.body;

@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI)
       const product = await Product.findById(hist.productId);
       
       if (!product) {
-        console.log("❌ No product found with ID:", hist.productId, "\n");
+        console.log("No product found with ID:", hist.productId, "\n");
       } else {
         console.log("✔ Match:", hist.name === product.name);
         console.log("History Product:", hist.name);

@@ -16,9 +16,9 @@ router.post("/donations", async (req, res) => {
     });
 
     await donation.save();
-    res.status(201).json({ message: "✅ Donation recorded successfully" });
+    res.status(201).json({ message: "Donation recorded successfully" });
   } catch (err) {
-    console.error("❌ Error adding donation:", err);
+    console.error("Error adding donation:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -29,7 +29,7 @@ router.post("/donations", async (req, res) => {
 //     const donations = await Donation.find().populate("productId");
 //     res.json(donations);
 //   } catch (err) {
-//     console.error("❌ Error fetching donations:", err);
+//     console.error("Error fetching donations:", err);
 //     res.status(500).json({ error: "Server error" });
 //   }
 // });
@@ -38,9 +38,9 @@ router.post("/donations", async (req, res) => {
 router.get("/donations", async (req, res) => {
   try {
     const donations = await Donation.find().populate("productId");
-    res.render("donations", { donations }); // 👈 Pass data to donations.ejs
+    res.render("donations", { donations }); // Pass data to donations.ejs
   } catch (err) {
-    console.error("❌ Error rendering donation page:", err);
+    console.error("Error rendering donation page:", err);
     res.status(500).send("Error loading donation page");
   }
 });

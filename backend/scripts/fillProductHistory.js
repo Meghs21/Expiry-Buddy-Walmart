@@ -1,4 +1,4 @@
-// 🔧 Import required modules
+// Import required modules
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { faker } = require("@faker-js/faker");
@@ -6,7 +6,7 @@ const { faker } = require("@faker-js/faker");
 const Product = require("../models/Product");
 const ProductHistory = require("../models/ProductHistory");
 
-// 🔌 Connect to MongoDB
+// Connect to MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -45,7 +45,7 @@ const generateHistoryFromProduct = (product) => {
         0
       );
 
-      // 🧠 Discount logic based on perishability and days left
+      // Discount logic based on perishability and days left
       if (isPerishable) {
         if (daysLeft <= 2) {
           discount = faker.number.int({ min: 50, max: 90 });

@@ -4,14 +4,14 @@ const Cart = require("../models/Cart");
 
 async function handleProductSold(req, res) {
   const productId = req.params.id;
-  const userId = req.session.userId; // ✅ Use session-based ID
+  const userId = req.session.userId; 
 
   try {
     const product = await Product.findById(productId);
-    if (!product) return res.status(404).send("❌ Product not found");
+    if (!product) return res.status(404).send("Product not found");
 
     const cartItem = await Cart.findOne({ userId, productId });
-    if (!cartItem) return res.status(404).send("❌ Product not found in cart");
+    if (!cartItem) return res.status(404).send("Product not found in cart");
 
     const soldQuantity = cartItem.quantity;
 
@@ -43,9 +43,9 @@ async function handleProductSold(req, res) {
 
     await Cart.deleteOne({ userId, productId });
 
-    res.send("✅ Product marked as sold and recorded in history.");
+    res.send("Product marked as sold and recorded in history.");
   } catch (error) {
-    console.error("❌ Error handling sale:", error);
+    console.error("Error handling sale:", error);
     res.status(500).send("Internal Server Error");
   }
 }

@@ -59,7 +59,7 @@ res.status(500).json({ error: "Server error" });
 // For HTML form submissions creating a product
 exports.createProductForm = async (req, res) => {
   try {
-    console.log("🟡 Incoming data:", req.body);
+    console.log("Incoming data:", req.body);
 
     const {
       name,
@@ -88,25 +88,25 @@ exports.createProductForm = async (req, res) => {
     });
 
     const saved = await newProduct.save();
-    console.log("✅ Product saved yippeee(form):", saved);
+    console.log("Product saved yippeee(form):", saved);
 
     res.redirect("/retailer");
   } catch (err) {
-    console.error("❌ Error saving product from form:", err);
-    res.status(400).send("❌ Failed to upload product");
+    console.error("Error saving product from form:", err);
+    res.status(400).send("Failed to upload product");
   }
 };
 
 // For API requests (fetch, Postman, etc.) creating a product
 exports.createProductAPI = async (req, res) => {
   try {
-    console.log("🟡 Received form data:", req.body);
+    console.log("Received form data:", req.body);
     const newProduct = new Product(req.body);
     const saved = await newProduct.save();
     res.status(201).json(saved);
 
   } catch (err) {
-    console.error("❌ Error saving product via API:", err);
+    console.error("Error saving product via API:", err);
     res.status(400).json({ error: "Invalid product data" });
   }
 };
