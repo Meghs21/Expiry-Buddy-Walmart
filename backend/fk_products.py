@@ -21,11 +21,11 @@ categories = {
 
 # Category image URLs
 category_images = {
-    "Dairy": "https://images.unsplash.com/photo-1589927986089-35812388d1a2",
-    "Bakery": "https://images.unsplash.com/photo-1608198093002-ad4e005484b9",
-    "Snacks": "https://images.unsplash.com/photo-1585238342029-3f84c61e5efb",
-    "Beverages": "https://images.unsplash.com/photo-1583422409516-8fd4e0b17ed2",
-    "Packaged Food": "https://images.unsplash.com/photo-1601050694283-724f4ec31342"
+    "Dairy": "https://img.freepik.com/free-photo/view-allergens-commonly-found-dairy_23-2150170319.jpg",
+    "Snacks": "https://i.pinimg.com/736x/76/ce/98/76ce988739f04866aad7a32c42ab8fe3.jpg",
+    "Bakery": "https://i.pinimg.com/1200x/6d/17/6d/6d176d4d9273b5919ea7a00dfa23c756.jpg",
+    "Packaged Food": "https://cdn.prod.website-files.com/651a8dcc505508a8b2c00a72/6828d4d2c8bbccc8ee0a07c0_ChatGPT%20Image%20May%2018%2C%202025%2C%2001_39_40%20AM.png",
+    "Beverages": "https://i.pinimg.com/736x/6d/a4/13/6da413d06fc0c4884fc4a77efd4a69d9.jpg"
 }
 
 # Predefined list of 6 seller names (major retailers)
