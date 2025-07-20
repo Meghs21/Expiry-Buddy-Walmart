@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const path = require("path"); // 👉 to handle path to views
 const cron = require("node-cron");
 const passport = require("passport");
+const runDonationCron = require('./cron/updateExpiry.js');
+
 
 //Routes & models
 const productRoutes = require("./routes/productRoutes");
@@ -394,64 +396,10 @@ app.get("/checkout", (req, res) => {
   res.redirect("/cart"); // or res.render("checkoutConfirm");
 });
 // ⏰ Cron Job – Runs every day at midnight
-cron.schedule("0 0 * * *", async () => {
-console.log("🕒 Running daily expiry check...");
-
-try {
-const expiredProducts = await Product.find({
-expiryDate: { $lt: new Date() },
+cron.schedule('0 0 * * *', () => {
+    console.log('🕒 Running daily donation cron');
+    runDonationCron();
 });
-
-for (const product of expiredProducts) {
-  // Archive to ProductHistory
-  await moveProductToHistory(product, false);
-
-  // Log in Donations
-  const donation = new Donation({
-    productId: product._id,
-    productName: product.name,
-    quantity: product.quantity,
-    expiryDate: product.expiryDate,
-    originalLocation: product.location,
-  });
-  await donation.save();
-
-  // Delete from Products collection
-  await Product.findByIdAndDelete(product._id);
-}
-  await Cart.deleteMany({ productId: { $in: expiredProductIds } });
-  await Wishlist.deleteMany({ productId: { $in: expiredProductIds } });
-
-  console.log(`✅ Archived and donated ${expiredProducts.length} expired products.`);
-} catch (err) {
-console.error("❌ Error in daily cron job:", err);
-}
-});
-// 🔧 Manual test for cron job logic
-(async () => {
-  console.log("⚙️ Manually testing expiry logic now...");
-  const expiredProducts = await Product.find({ expiryDate: { $lt: new Date() } });
-
-  for (const product of expiredProducts) {
-    await moveProductToHistory(product, false);
-
-    const donation = new Donation({
-      productId: product._id,
-      productName: product.name,
-      quantity: product.quantity,
-      expiryDate: product.expiryDate,
-      originalLocation: product.location,
-    });
-    await donation.save();
-
-    await Product.findByIdAndDelete(product._id);
-  }
-
-  const cartResult = await Cart.deleteMany({ productId: { $in: expiredProducts } });
-  const wishlistResult = await Wishlist.deleteMany({ productId: { $in: expiredProducts } });
-
-  console.log(`✅ Manually processed ${expiredProducts.length} expired products.`);
-})();
 
 // Start the server
 const PORT = process.env.PORT || 5000;

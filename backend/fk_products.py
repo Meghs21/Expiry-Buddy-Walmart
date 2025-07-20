@@ -1,23 +1,20 @@
 from faker import Faker
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import os
 import random
 
-# MongoDB Atlas connection
-client = MongoClient("mongodb+srv://expiryuser:test1234@expirybuddy-db.sk4fszh.mongodb.net/expirybuddy?retryWrites=true&w=majority&appName=expirybuddy-db")
+load_dotenv("../backend/.env")
+# MongoDB connection
+client = MongoClient(os.getenv("MONGO_URI"))
 db = client["expirybuddy"]
 products = db["products"]
 
 faker = Faker()
 
-# Product categories and perishable flags
-categories = {
-    "Dairy": 1,
-    "Bakery": 1,
-    "Snacks": 0,
-    "Beverages": 0,
-    "Packaged Food": 0
-}
+# Product categories
+categories = ["Dairy", "Bakery", "Snacks", "Beverages", "Packaged Food"]
 
 # Category image URLs
 category_images = {
@@ -28,35 +25,46 @@ category_images = {
     "Beverages": "https://i.pinimg.com/736x/6d/a4/13/6da413d06fc0c4884fc4a77efd4a69d9.jpg"
 }
 
-# Predefined list of 6 seller names (major retailers)
-retailers = [
-    "Walmart",
-    "Target",
-    "Costco",
-    "Kroger",
-    "Whole Foods",
-    "Safeway"
-]
+# Predefined retailer names
+retailers = ["Walmart", "Target", "Costco", "Kroger", "Whole Foods", "Safeway"]
 
-# Clear collection for clean insert (optional)
+# Clear collection for fresh data
 products.delete_many({})
 
-# Generate 200 fake product documents
+def compute_is_perishable(category, expiry_date, created_at):
+    # Retailer override not used here (faker)
+    if category in ["Dairy", "Bakery"]:
+        return True
+    if expiry_date:
+        days = (expiry_date - created_at).days
+        if days <= 15:
+            return True
+    return False
+
+# Generate 200 fake products
 for _ in range(200):
-    category = random.choice(list(categories.keys()))
-    is_perishable = categories[category]
+    category = random.choice(categories)
     name = faker.word().capitalize() + " " + category
     price = round(random.uniform(20, 300), 2)
     quantity = random.randint(1, 30)
+    created_at = datetime.now()
 
-    # Logical expiry dates
-    if is_perishable:
-        days_left = random.randint(1, 5)
+    # Decide expiry type (60% full date, 40% month-year)
+
+    if category in ["Dairy", "Bakery"]:
+            days_left = random.randint(1, 15)
+            expiry_date = created_at + timedelta(days=days_left)
     else:
-        days_left = random.randint(5, 30)
-    expiry_date = datetime.now() + timedelta(days=days_left)
+        if random.random() < 0.6:
+            days_left = random.randint(2, 90)
+            expiry_date = created_at + timedelta(days=days_left)
+        else:
+            months_ahead = random.randint(1, 12)
+            future_date = created_at + timedelta(days=30 * months_ahead)
+            expiry_date = datetime(future_date.year, future_date.month, 1)
+            days_left = (expiry_date - created_at).days
 
-    # Logical discount based on expiry
+    # Compute discount
     if days_left <= 2:
         discount = random.randint(50, 90)
     elif days_left <= 5:
@@ -65,7 +73,7 @@ for _ in range(200):
         discount = random.randint(0, 15)
 
     final_price = round(price - (price * discount / 100), 2)
-
+    is_perishable = compute_is_perishable(category, expiry_date, created_at)
 
     product = {
         "name": name,
@@ -79,10 +87,11 @@ for _ in range(200):
         "imageUrl": category_images[category],
         "sellerName": random.choice(retailers),
         "location": faker.city(),
-        "createdAt": datetime.now(),
-        "isSold": False
+        "createdAt": created_at,
+        "isSold": False,
+        "movedToDonation": False
     }
 
     products.insert_one(product)
 
-print("✅ Inserted 200 logically consistent fake products into MongoDB Atlas.")
+print("✅ Inserted 200 fake products with new expiry logic into MongoDB Atlas.")

@@ -1,6 +1,8 @@
 // Import required modules
 const mongoose = require("mongoose");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
+
 const { faker } = require("@faker-js/faker");
 
 const Product = require("../models/Product");

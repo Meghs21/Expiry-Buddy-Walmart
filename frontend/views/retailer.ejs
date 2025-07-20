@@ -157,209 +157,7 @@
           </p>
         </div>
       </div>
-
-      
-        <!-- <form id="product-form"  action="/products" method="POST">
-          <div class="mb-8">
-            <h3 class="text-lg font-medium mb-4 pb-2 border-b border-gray-100">
-              Basic Information
-            </h3>
-
-            <div class="mb-5">
-              <label for="product-name" class="block text-gray-700 mb-2"
-                >Product Name</label
-              >
-              <input
-                type="text"
-                id="product-name"
-                class="w-full px-4 py-3 rounded bg-gray-50"
-                placeholder="Enter product name"
-                name="name"
-              />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-              <div>
-                <label for="category" class="block text-gray-700 mb-2"
-                  >Category</label
-                >
-                <div class="relative">
-                  <select
-                    id="category"
-                    class="w-full px-4 py-3 rounded bg-gray-50 appearance-none pr-8"
-                  >
-                    <option value="" disabled selected>Select category</option>
-                    <option value="dairy">Dairy</option>
-                    <option value="bakery">Bakery</option>
-                    <option value="produce">Produce</option>
-                    <option value="meat">Meat & Seafood</option>
-                    <option value="pantry">Pantry Items</option>
-                    <option value="frozen">Frozen Foods</option>
-                    <option value="beverages">Beverages</option>
-                  </select>
-                  <div
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-5 h-5 flex items-center justify-center"
-                  >
-                    <i class="ri-arrow-down-s-line"></i>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label for="subcategory" class="block text-gray-700 mb-2"
-                  >Subcategory</label
-                >
-                <div class="relative">
-                  <select
-                    id="subcategory"
-                    class="w-full px-4 py-3 rounded bg-gray-50 appearance-none pr-8"
-                  >
-                    <option value="" disabled selected>
-                      Select subcategory
-                    </option>
-                    <option value="milk">Milk & Cream</option>
-                    <option value="cheese">Cheese</option>
-                    <option value="yogurt">Yogurt</option>
-                    <option value="bread">Bread</option>
-                    <option value="pastries">Pastries</option>
-                  </select>
-                  <div
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-5 h-5 flex items-center justify-center"
-                  >
-                    <i class="ri-arrow-down-s-line"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label for="original-price" class="block text-gray-700 mb-2"
-                  >Original Price ($)</label
-                >
-                <input
-                  type="number"
-                  id="original-price"
-                  class="w-full px-4 py-3 rounded bg-gray-50"
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                  name="price"
-                />
-              </div>
-              <div>
-                <label for="discount" class="block text-gray-700 mb-2"
-                  >Discount (%)</label
-                >
-                <input
-                  type="number"
-                  id="discount"
-                  class="w-full px-4 py-3 rounded bg-gray-50"
-                  placeholder="0"
-                  min="0"
-                  max="100"
-                  name="discount"
-                />
-              </div>
-            </div>
-          </div>
-
-          
-          <div class="mb-8">
-            <h3 class="text-lg font-medium mb-4 pb-2 border-b border-gray-100">
-              Product Details
-            </h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-              <div>
-                <label for="quantity" class="block text-gray-700 mb-2"
-                  >Quantity</label
-                >
-                <input
-                  type="number"
-                  id="quantity"
-                  class="w-full px-4 py-3 rounded bg-gray-50"
-                  placeholder="0"
-                  min="1"
-                  name="quantity"
-                />
-              </div>
-              <div>
-                <label for="expiry-date" class="block text-gray-700 mb-2"
-                  >Expiry Date</label
-                >
-                <input
-                  type="date"
-                  id="expiry-date"
-                  class="w-full px-4 py-3 rounded bg-gray-50"
-                  name="expiryDate"
-                />
-              </div>
-            </div>
-
-            <div class="mb-5">
-              <label for="store-location" class="block text-gray-700 mb-2"
-                >Store Location</label
-              >
-              <input
-                type="text"
-                id="store-location"
-                class="w-full px-4 py-3 rounded bg-gray-50"
-                placeholder="Enter store address"
-                name="location"
-              />
-            </div>
-
-            <div class="mb-5">
-              <label for="description" class="block text-gray-700 mb-2"
-                >Product Description</label
-              >
-              <textarea
-                id="description"
-                rows="4"
-                class="w-full px-4 py-3 rounded bg-gray-50"
-                placeholder="Describe your product..."
-              ></textarea>
-            </div>
-
-            <div>
-              <label for="image-url" class="block text-gray-700 mb-2"
-                >Image URL</label
-              >
-              <input
-                name="imageUrl"
-                type="url"
-                id="image-url"
-                class="w-full px-4 py-3 rounded bg-gray-50"
-                placeholder="https://..."
-              />
-            </div>
-          </div>
-
-          <div class="mb-8">
-            <h3 class="text-lg font-medium mb-4 pb-2 border-b border-gray-100">
-              Additional Options
-            </h3>
-
-            <div class="flex items-start mb-4">
-              <input
-                name="is_perishable"
-                type="checkbox"
-                id="perishable"
-                class="custom-checkbox mt-1"
-              />
-              <label for="perishable" class="ml-3 text-gray-700"
-                >This is a perishable item</label
-              >
-            </div>
-
-            <div class="flex items-start">
-              <input type="checkbox" id="donate" class="custom-checkbox mt-1" />
-              <label for="donate" class="ml-3 text-gray-700"
-                >I agree to donate unsold items to local shelters</label
-              >
-            </div>
-          </div> -->
-          <!-- Form Section -->
+        
         <div class="bg-white rounded-xl shadow-md p-6 mb-10">
             <h2 class="text-2xl font-semibold mb-6 text-gray-800">
                Upload Your Product
@@ -470,16 +268,52 @@
           required
         />
       </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
       <div>
-        <label for="expiry-date" class="block text-gray-700 mb-2">Expiry Date</label>
-        <input
-          type="date"
-          id="expiry-date"
-          name="expiryDate"
-          class="w-full px-4 py-3 rounded bg-gray-50"
-          required
-        />
+          <label for="expiry-day" class="block text-gray-700 mb-2">Expiry Day (optional)</label>
+          <input
+              type="number"
+              id="expiry-day"
+              name="expiryDay"
+              min="1"
+              max="31"
+              class="w-full px-4 py-3 rounded bg-gray-50"
+              placeholder="Default is 1 if empty"
+          />
       </div>
+
+      <div>
+          <label for="expiry-month" class="block text-gray-700 mb-2">Expiry Month</label>
+          <input
+              type="number"
+              id="expiry-month"
+              name="expiryMonth"
+              min="1"
+              max="12"
+              class="w-full px-4 py-3 rounded bg-gray-50"
+              placeholder="e.g. 6 for June"
+              required
+          />
+      </div>
+
+      <div>
+          <label for="expiry-year" class="block text-gray-700 mb-2">Expiry Year</label>
+          <input
+              type="number"
+              id="expiry-year"
+              name="expiryYear"
+              min="2024"
+              class="w-full px-4 py-3 rounded bg-gray-50"
+              placeholder="e.g. 2025"
+              required
+          />
+      </div>
+      <small class="text-gray-500">
+          Provide month and year. Day is optional, defaults to 1 if not provided.
+      </small>
+
+  </div>
+
     </div>
 
     <div class="mb-5">
@@ -531,10 +365,10 @@
       <label for="perishable" class="ml-3 text-gray-700">This is a perishable item</label>
     </div>
 
-    <div class="flex items-start">
+    <!-- <div class="flex items-start">
       <input type="checkbox" id="donate" class="custom-checkbox mt-1" />
       <label for="donate" class="ml-3 text-gray-700">I agree to donate unsold items to local shelters</label>
-    </div>
+    </div> -->
   </div>
 
 <input type="hidden" name="sellerName" id="sellerName" />
@@ -572,21 +406,6 @@
         //const form = document.getElementById("product-form");
         const donateBtn = document.getElementById("donate-btn");
 
-        
-      //   form.addEventListener("submit", function () {
-      //   const productName = document.getElementById("product-name").value;
-      //   const category = document.getElementById("category").value;
-      //   const price = document.getElementById("original-price").value;
-
-      //   if (!productName || !category || !price) {
-      //   alert("Please fill in all required fields...");
-      //   return;
-      // }
-
-      // alert("Product successfully uploaded for sale!");
-      // // DO NOT preventDefault. Let it submit
-      //  });
-
 
         donateBtn.addEventListener("click", function () {
           const productName = document.getElementById("product-name").value;
@@ -613,7 +432,6 @@
                 (originalPrice.value * (100 - discount.value)) /
                 100
               ).toFixed(2);
-              // In a real app, you might display this somewhere
               console.log("Discounted price:", discountedPrice);
             }
           });
