@@ -30,7 +30,7 @@ async function runDonationCron() {
 
     for (const product of perishableProducts) {
         await createDonationFromProduct(product, product.quantity);
-        await product.remove();
+        await Product.deleteOne({ _id: product._id });
     }
 
     // 2. Non-Perishable products - First stage (60% of quantity 15 days before expiry)

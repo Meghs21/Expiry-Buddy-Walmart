@@ -396,7 +396,7 @@ app.get("/checkout", (req, res) => {
   res.redirect("/cart"); // or res.render("checkoutConfirm");
 });
 // ⏰ Cron Job – Runs every day at midnight
-cron.schedule('0 0 * * *', () => {
+cron.schedule('* * * * *', () => {
     console.log('🕒 Running daily donation cron');
     runDonationCron();
 });
